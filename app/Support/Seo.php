@@ -101,6 +101,19 @@ class Seo
         return $this;
     }
 
+    /**
+     * The trail, for rendering a visible breadcrumb.
+     *
+     * Deliberately the same array the BreadcrumbList markup is built from, so
+     * the structured data can never describe a path the page does not show.
+     *
+     * @return array<int,array{name:string,url:?string}>
+     */
+    public function trail(): array
+    {
+        return $this->breadcrumbs;
+    }
+
     public function addJsonLd(array $node): static
     {
         $this->extraJsonLd[] = $node;

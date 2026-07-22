@@ -76,6 +76,25 @@ class SeoTest extends TestCase
         $this->assertStringContainsString('autocomplete="email"', $html);
     }
 
+    /**
+     * The audit found BreadcrumbList markup with no visible trail. Structured
+     * data is only allowed to describe what the page actually shows.
+     */
+    public function test_breadcrumbs_are_visible_on_interior_pages_only(): void
+    {
+        $article = $this->get('/news/stanovishte-ai-act')->assertOk()->getContent();
+        $this->assertStringContainsString('aria-current="page"', $article);
+        $this->assertStringContainsString('BreadcrumbList', $article);
+
+        $en = $this->get('/en/news/stanovishte-ai-act')->assertOk()->getContent();
+        $this->assertStringContainsString('News', $en);
+
+        // The homepage trail is a single item, which describes no path at all —
+        // neither the visible trail nor the markup should appear.
+        $home = $this->get('/')->assertOk()->getContent();
+        $this->assertStringNotContainsString('BreadcrumbList', $home);
+    }
+
     /** The LCP image must never be lazy-loaded (SEO.md:1048). */
     public function test_above_the_fold_imagery_is_eager(): void
     {
