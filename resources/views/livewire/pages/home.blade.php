@@ -109,25 +109,74 @@
         </div>
     @endif
 
-    {{-- Illustrative adoption chart --}}
+    {{-- AI adoption, Bulgaria vs the EU-27. Real Eurostat figures — see
+         config/eurostat.php for the dataset, population and caveats. --}}
+    @php
+        $adoption = config('eurostat.ai_adoption');
+        $scale = $adoption['scale_max'];
+        $latest = $adoption['series'][2025];
+        // Bulgarian writes decimals with a comma: 8,55% not 8.55%.
+        $num = fn ($v) => $loc === 'bg' ? str_replace('.', ',', (string) $v) : (string) $v;
+    @endphp
     <div class="reveal chart max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-16 items-center">
         <div>
-            <h2 class="text-2xl lg:text-3xl font-bold mb-4">{{ __('Внедряването на AI расте всяка година') }}</h2>
-            <p class="text-[16.5px] leading-[1.7] text-body mb-6">{{ __('Все повече български компании изследват и внедряват изкуствен интелект. Националното проучване на Съвета ще покаже реалната картина.') }}</p>
-            <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-[15px] font-semibold text-brand">{{ __('Към проучването') }} →</a>
+            <h2 class="text-2xl lg:text-3xl font-bold mb-4">{{ __('Българският бизнес е под половината от средното за ЕС') }}</h2>
+            <p class="text-[16.5px] leading-[1.7] text-body mb-4">
+                {{ __('През 2025 г. изкуствен интелект използват :bg% от българските предприятия с 10 и повече заети, при :eu% средно за ЕС. Разстоянието не се стопява, а се разширява.', ['bg' => $num($latest['bg']), 'eu' => $num($latest['eu'])]) }}
+            </p>
+            <p class="text-[14.5px] leading-[1.6] text-muted mb-6">
+                {{ __('Националното проучване на Съвета ще покаже какво стои зад тази цифра — кои процеси, кои пречки и кои сектори.') }}
+            </p>
+            <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-[15px] font-semibold text-brand-dark">{{ __('Към проучването') }} →</a>
         </div>
         <div>
-            <div class="flex items-end gap-2 sm:gap-4 h-[200px] lg:h-[240px]">
-                @foreach ([['2022', 42], ['2023', 58], ['2024', 71], ['2025', 86], ['2026', 100]] as $b)
+            <div class="flex items-center gap-5 mb-4 text-[12.5px]">
+                <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-brand block"></span>{{ __('България') }}</span>
+                <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-ink block"></span>{{ __('ЕС-27') }}</span>
+            </div>
+
+            {{-- aria-hidden: the equivalent table below carries the same data
+                 for anyone who cannot read the bars. --}}
+            <div aria-hidden="true" class="flex items-end gap-3 sm:gap-6 h-[200px] lg:h-[240px]">
+                @foreach ($adoption['series'] as $year => $v)
                     <div class="flex-1 flex flex-col items-center gap-2 h-full">
-                        <div class="w-full flex-1 flex items-end bg-[#F2F1ED]">
-                            <div class="bar w-full {{ $loop->last ? 'bg-brand' : 'bg-ink' }}" style="--h: {{ $b[1] }}%"></div>
+                        <div class="w-full flex-1 flex items-end gap-1">
+                            <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
+                                <div class="bar w-full bg-brand" style="--h: {{ round($v['bg'] / $scale * 100, 1) }}%"></div>
+                            </div>
+                            <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
+                                <div class="bar w-full bg-ink" style="--h: {{ round($v['eu'] / $scale * 100, 1) }}%"></div>
+                            </div>
                         </div>
-                        <span class="text-[12px] text-faint">{{ $b[0] }}</span>
+                        <span class="text-[12px] text-faint">{{ $year }}</span>
                     </div>
                 @endforeach
             </div>
-            <p class="text-[12.5px] text-faint mt-3">{{ __('Примерни данни — илюстрация.') }}</p>
+
+            <table class="sr-only">
+                <caption>{{ __('Дял на предприятията с 10 и повече заети, използващи поне една технология на изкуствен интелект') }}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{ __('Година') }}</th>
+                        <th scope="col">{{ __('България') }}</th>
+                        <th scope="col">{{ __('ЕС-27') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($adoption['series'] as $year => $v)
+                        <tr>
+                            <th scope="row">{{ $year }}</th>
+                            <td>{{ $num($v['bg']) }}%</td>
+                            <td>{{ $num($v['eu']) }}%</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <p class="text-[12.5px] text-faint mt-3 leading-[1.5]">
+                {{ __('Източник: Евростат, :dataset (предприятия с 10+ заети, без селско стопанство, добив и финансов сектор). Няма наблюдение за 2022 г. От 2025 г. показателят обхваща осем технологии вместо седем.', ['dataset' => $adoption['dataset']]) }}
+                <a href="{{ $adoption['source_url'] }}" rel="nofollow noopener" target="_blank" class="underline hover:text-ink">{{ __('Данните') }}</a>
+            </p>
         </div>
     </div>
 

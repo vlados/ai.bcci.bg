@@ -11,10 +11,7 @@
     "Към новините": "To the news",
     "Прочетете": "Read more",
     "Още новини": "More news",
-    "Внедряването на AI расте всяка година": "AI adoption is growing year over year",
-    "Все повече български компании изследват и внедряват изкуствен интелект. Националното проучване на Съвета ще покаже реалната картина.": "More and more Bulgarian companies are exploring and adopting artificial intelligence. The Council’s national survey will reveal the real picture.",
     "Към проучването": "To the survey",
-    "Примерни данни — илюстрация.": "Sample data — illustration.",
     "Новини": "News",
     "Изображение": "Image",
     "Снимка": "Photo",
@@ -27,5 +24,16 @@
     "Благодарим ви! Съобщението беше изпратено.": "Thank you! Your message has been sent.",
     "Имейл": "Email",
     "Телефон": "Phone",
-    "Адрес": "Address"
+    "Адрес": "Address",
+    "Българският бизнес е под половината от средното за ЕС": "Bulgarian business is at less than half the EU average",
+    "През 2025 г. изкуствен интелект използват :bg% от българските предприятия с 10 и повече заети, при :eu% средно за ЕС. Разстоянието не се стопява, а се разширява.": "In 2025, :bg% of Bulgarian enterprises with 10 or more persons employed used AI, against an EU average of :eu%. The gap is not closing — it is widening.",
+    "Националното проучване на Съвета ще покаже какво стои зад тази цифра — кои процеси, кои пречки и кои сектори.": "The Council’s national survey will show what sits behind that figure — which processes, which barriers and which sectors.",
+    "България": "Bulgaria",
+    "ЕС-27": "EU-27",
+    "Дял на предприятията с 10 и повече заети, използващи поне една технология на изкуствен интелект": "Share of enterprises with 10 or more persons employed using at least one artificial-intelligence technology",
+    "Година": "Year",
+    "Източник: Евростат, :dataset (предприятия с 10+ заети, без селско стопанство, добив и финансов сектор). Няма наблюдение за 2022 г. От 2025 г. показателят обхваща осем технологии вместо седем.": "Source: Eurostat, :dataset (enterprises with 10+ persons employed, excluding agriculture, mining and the financial sector). There is no 2022 observation. From 2025 the indicator covers eight technologies instead of seven.",
+    "Данните": "View the data",
+    "Език": "Language",
+    "Навигация": "Navigation"
 }

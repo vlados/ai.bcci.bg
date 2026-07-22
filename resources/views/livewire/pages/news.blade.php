@@ -27,7 +27,12 @@
                     <div class="text-[13px] text-faint mb-2.5">{{ $article->published_at?->translatedFormat('j F Y') }}</div>
                     <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block text-[21px] font-bold leading-[1.35] mb-3 text-pretty hover:text-brand">{{ $article->tr('title') }}</a>
                     <p class="text-[15.5px] leading-[1.65] text-[#55565A] mb-4">{{ $article->tr('excerpt') }}</p>
-                    <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="text-[14.5px] font-semibold text-brand">{{ __('Прочетете') }} →</a>
+                    {{-- Every card on the page would otherwise expose the same
+                         anchor text, which is useless in a screen reader's link
+                         list and gives search engines nothing to work with. --}}
+                    <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="text-[14.5px] font-semibold text-brand-dark">
+                        {{ __('Прочетете') }}<span class="sr-only">: {{ $article->tr('title') }}</span> <span aria-hidden="true">→</span>
+                    </a>
                 </div>
             </article>
         @empty
