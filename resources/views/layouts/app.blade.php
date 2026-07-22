@@ -34,7 +34,9 @@
     @include('partials.topbar')
     @include('partials.header')
 
-    <main id="main">
+    {{-- tabindex="-1" so the skip link can actually move focus here, and so
+         app.js can restore focus after a wire:navigate page swap. --}}
+    <main id="main" tabindex="-1" class="focus:outline-none">
         {{ $slot }}
     </main>
 

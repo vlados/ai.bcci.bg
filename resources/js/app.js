@@ -245,13 +245,42 @@ function boot() {
     requestAnimationFrame(() => placeNavBall(true));
 }
 
+/**
+ * Move focus to the new page after a wire:navigate swap.
+ *
+ * A real navigation resets focus to the top of the document; a same-document
+ * swap does not, so a keyboard or screen-reader user is left with focus on a
+ * link that no longer exists and has no idea the page changed. Focusing <main>
+ * restores the behaviour the browser would have given us for free.
+ *
+ * Skipped on first paint — the browser has already done the right thing there,
+ * and stealing focus on load would scroll past the header unprompted.
+ */
+let hasNavigated = false;
+
+function restoreFocusAfterNavigation() {
+    if (!hasNavigated) {
+        hasNavigated = true;
+
+        return;
+    }
+
+    const main = document.getElementById('main');
+    if (main && document.activeElement !== main) {
+        main.focus({ preventScroll: true });
+    }
+}
+
 if (document.readyState !== 'loading') {
     boot();
 } else {
     document.addEventListener('DOMContentLoaded', boot);
 }
 // Livewire's SPA navigation swaps the DOM without a full reload.
-document.addEventListener('livewire:navigated', boot);
+document.addEventListener('livewire:navigated', () => {
+    boot();
+    restoreFocusAfterNavigation();
+});
 window.addEventListener('resize', () => placeNavBall(false));
 // Reposition once web fonts settle (condensed metrics can shift widths).
 if (document.fonts && document.fonts.ready) {

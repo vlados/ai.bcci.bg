@@ -17,7 +17,10 @@
     --color-ink-soft: #37383c;
     --color-body: #4a4b50;
     --color-muted: #6a6b70;
-    --color-faint: #8a8b8f;
+    /* Was #8a8b8f = 3.40:1 on white, which fails WCAG AA for normal text — and
+       it carries real content (article dates, captions), not just decoration.
+       #73747a is 4.66:1: the smallest change that passes. */
+    --color-faint: #73747a;
     --color-line: #e6e4df;
     --color-paper: #f6f5f2;
     --color-footer-field: #1d1e22;

@@ -34,7 +34,12 @@ class NewsArticle extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('is_published', true)->whereNotNull('published_at');
+        // `published_at` in the future means scheduled, not published — without
+        // the date check a future-dated article leaks onto the site and into
+        // the sitemap the moment it is saved.
+        return $query->where('is_published', true)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
     }
 
     public function getRouteKeyName(): string

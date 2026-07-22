@@ -54,7 +54,16 @@ class SiteNav
         $out = [];
         foreach (config('site.locales') as $locale => $label) {
             $name = $locale.'.'.$base;
-            $url = Route::has($name) ? route($name, $params) : route($locale.'.home');
+
+            // If a route has no counterpart in this locale, omit the alternate
+            // entirely. Falling back to that locale's homepage would publish a
+            // non-reciprocal hreflang pair — a wrong answer dressed as a right
+            // one, which is worse for indexation than simply saying nothing.
+            if (! Route::has($name)) {
+                continue;
+            }
+
+            $url = route($name, $params);
             $out[] = [
                 'locale' => $locale,
                 'label' => $label,

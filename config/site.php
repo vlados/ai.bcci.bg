@@ -47,6 +47,10 @@ return [
             'https://www.bcci.bg',
         ],
         'founding_date' => '2026',
+        // Used by the PostalAddress node; the street line comes from the
+        // editable contact block so markup and visible address stay in step.
+        'locality' => 'София',
+        'postal_code' => '1058',
         'area_served' => ['bg' => 'България', 'en' => 'Bulgaria'],
         'knows_about' => [
             ['bg' => 'Изкуствен интелект', 'en' => 'Artificial intelligence'],

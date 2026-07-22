@@ -223,6 +223,7 @@ class Seo
                 'name' => $this->localized(config('site.org.parent.name')),
                 'url' => config('site.org.parent.url'),
             ],
+            'address' => $this->postalAddress(),
             'contactPoint' => $this->contactPoint(),
         ]);
 
@@ -251,7 +252,9 @@ class Seo
 
         $graph = [$organization, $website, $webpage];
 
-        if (! empty($this->breadcrumbs)) {
+        // A one-item trail ("Начало") describes nothing and is not a breadcrumb;
+        // emit the node only where there is an actual path to describe.
+        if (count($this->breadcrumbs) > 1) {
             $graph[] = $this->breadcrumbList($canonical);
         }
 
@@ -282,6 +285,30 @@ class Seo
             '@id' => $canonical.'#breadcrumb',
             'itemListElement' => $items,
         ];
+    }
+
+    /**
+     * Postal address for the Organization node.
+     *
+     * Sourced from the editable contact block rather than hardcoded, so the
+     * markup can never drift from the address the page actually shows — the
+     * audit's rule that structured data must describe visible content.
+     */
+    protected function postalAddress(): ?array
+    {
+        $address = trim((string) $this->global()->get('contact_address'));
+
+        if ($address === '') {
+            return null;
+        }
+
+        return array_filter([
+            '@type' => 'PostalAddress',
+            'streetAddress' => trim(preg_replace('/\s+/', ' ', $address)),
+            'addressLocality' => config('site.org.locality'),
+            'postalCode' => config('site.org.postal_code'),
+            'addressCountry' => 'BG',
+        ]);
     }
 
     protected function contactPoint(): ?array
