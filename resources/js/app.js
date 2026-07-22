@@ -75,15 +75,24 @@ function placeNavBall(animate) {
 
     if (shouldAnimate && typeof ball.animate === 'function') {
         const fromX = navBallX;
-        const midX = (fromX + toX) / 2;
+        const dx = toX - fromX;
+        const at = (f) => `${fromX + dx * f}px`;
+        const up = 'cubic-bezier(.33,.66,.4,1)';   // decelerate toward apex
+        const down = 'cubic-bezier(.6,.04,.98,.34)'; // accelerate toward ground
+
         ball.animate(
             [
-                { transform: `translateX(${fromX}px) translateY(0) scale(1, 1)` },
-                { transform: `translateX(${midX}px) translateY(-14px) scale(0.8, 1.2)`, offset: 0.45 },
-                { transform: `translateX(${toX}px) translateY(0) scale(1.3, 0.75)`, offset: 0.82 },
-                { transform: `translateX(${toX}px) translateY(0) scale(1, 1)` },
+                { transform: `translateX(${at(0)}) translateY(0) scale(1,1)`, offset: 0, easing: up },
+                { transform: `translateX(${at(0.28)}) translateY(-26px) scale(0.84,1.2)`, offset: 0.16, easing: down },
+                { transform: `translateX(${at(0.5)}) translateY(0) scale(1.32,0.74)`, offset: 0.32, easing: up },
+                { transform: `translateX(${at(0.68)}) translateY(-15px) scale(0.9,1.12)`, offset: 0.48, easing: down },
+                { transform: `translateX(${at(0.8)}) translateY(0) scale(1.2,0.82)`, offset: 0.62, easing: up },
+                { transform: `translateX(${at(0.9)}) translateY(-7px) scale(0.95,1.06)`, offset: 0.74, easing: down },
+                { transform: `translateX(${at(0.96)}) translateY(0) scale(1.1,0.9)`, offset: 0.84, easing: up },
+                { transform: `translateX(${at(0.99)}) translateY(-3px) scale(1,1)`, offset: 0.93, easing: down },
+                { transform: `translateX(${toX}px) translateY(0) scale(1,1)`, offset: 1 },
             ],
-            { duration: 560, easing: 'cubic-bezier(.34, 1.15, .5, 1)' }
+            { duration: 780, easing: 'linear' }
         );
     }
 
