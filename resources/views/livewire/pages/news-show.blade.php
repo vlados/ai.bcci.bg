@@ -24,10 +24,10 @@
                 <h2 class="text-2xl font-bold mb-[34px]">{{ __('Още новини') }}</h2>
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-[26px]">
                     @foreach ($more as $item)
-                        <a href="{{ route($loc.'.news.show', $item) }}" wire:navigate class="border border-line bg-white block hover:border-ink">
+                        <a href="{{ route($loc.'.news.show', $item) }}" wire:navigate class="group lift border border-line bg-white block hover:border-ink">
                             <div class="h-[180px] overflow-hidden bg-[#E8E7E2]">
                                 @if ($item->imageUrl())
-                                    <img src="{{ $item->imageUrl() }}" alt="{{ $item->tr('title') }}" loading="lazy" class="w-full h-full object-cover block">
+                                    <img src="{{ $item->imageUrl() }}" alt="{{ $item->tr('title') }}" loading="lazy" class="photo w-full h-full object-cover block">
                                 @endif
                             </div>
                             <div class="px-[26px] pt-6 pb-7">

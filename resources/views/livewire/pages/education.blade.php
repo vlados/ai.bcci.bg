@@ -8,17 +8,17 @@
         </div>
     </div>
 
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-16">
+    <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-16">
         <h2 class="text-2xl lg:text-3xl font-bold tracking-[-0.3px] text-pretty">{{ $page->get('body_title') }}</h2>
         <div class="rich text-[16.5px] text-body">{!! $page->get('body') !!}</div>
     </div>
 
     <div class="bg-paper border-t border-line">
-        <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
+        <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
             <h2 class="text-2xl lg:text-3xl font-bold mb-[34px]">{{ $page->get('plans_title') }}</h2>
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-[26px]">
                 @foreach ($page->list('plans') as $p)
-                    <div class="bg-white border border-line px-[26px] pt-7 pb-8">
+                    <div class="lift bg-white border border-line px-[26px] pt-7 pb-8">
                         <div class="text-[15px] font-bold text-brand mb-3">{{ $p['num'] ?? '' }}</div>
                         <div class="text-[17px] font-bold mb-2.5">{{ $p['title'] ?? '' }}</div>
                         <p class="text-[14.5px] leading-[1.6] text-[#55565A]">{{ $p['text'] ?? '' }}</p>

@@ -8,12 +8,12 @@
         </div>
     </div>
 
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
+    <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
         <p class="text-[16.5px] leading-[1.7] text-body mb-[34px] max-w-[760px]">{{ $page->get('intro') }}</p>
         @if ($partners->isNotEmpty())
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-[26px]">
                 @foreach ($partners as $partner)
-                    @php $box = 'border border-line h-[130px] flex items-center justify-center bg-[#FBFAF8] p-4'; @endphp
+                    @php $box = 'lift border border-line h-[130px] flex items-center justify-center bg-[#FBFAF8] p-4'; @endphp
                     @if ($partner->url)
                         <a href="{{ $partner->url }}" target="_blank" rel="noopener" class="{{ $box }} hover:border-ink">
                             @if ($partner->logo)

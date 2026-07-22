@@ -8,12 +8,12 @@
         </div>
     </div>
 
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
+    <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
         <div class="rich text-[16.5px] text-body max-w-[900px]">{!! $page->get('body') !!}</div>
     </div>
 
     <div class="bg-paper border-t border-line">
-        <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
+        <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
             <h2 class="text-2xl lg:text-3xl font-bold mb-[34px]">{{ $page->get('list_title') }}</h2>
             @if ($positions->isNotEmpty())
                 <div class="bg-white border border-line">

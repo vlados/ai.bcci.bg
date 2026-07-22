@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-14 items-start">
+    <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-14 items-start">
         <form wire:submit="submit" class="border border-line px-5 py-6 sm:px-10 sm:pt-9 sm:pb-10">
             <h2 class="text-2xl font-bold mb-6">{{ $page->get('form_title') }}</h2>
 

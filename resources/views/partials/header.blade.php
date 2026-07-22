@@ -14,7 +14,7 @@
                 @else
                     <a href="{{ $item['url'] }}" wire:navigate
                        @if ($item['active']) aria-current="page" @endif
-                       class="{{ $item['active'] ? 'text-brand' : 'text-ink-soft' }} hover:text-brand">{{ $item['label'] }}</a>
+                       class="relative {{ $item['active'] ? 'text-brand' : 'text-ink-soft' }} hover:text-brand">{{ $item['label'] }}@if ($item['active'])<span class="dot absolute -bottom-2 left-1/2 -translate-x-1/2"></span>@endif</a>
                 @endif
             @endforeach
         </nav>
