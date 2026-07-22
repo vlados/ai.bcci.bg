@@ -90,20 +90,42 @@ return [
     ],
 
     /*
-     | Enterprises with at least a basic level of digital intensity (DII ≥ 4 of
-     | 12 criteria) — the Digital Decade headline indicator.
+     | Enterprises with at least a basic level of digital intensity.
      |
-     | Dataset:    isoc_e_dii (indicator E_DI4_GELO, unit PC_ENT, GE10)
-     | Note:       biennial; only 2022 and 2024 exist on this methodology, so
-     |             it cannot be plotted against the AI years and is quoted in
-     |             prose instead. Earlier E_DI/E_DI3 series use a different
-     |             definition and are NOT comparable.
+     | Dataset:    isoc_e_dii (indicator E_DI3_GELO, unit PC_ENT, GE10,
+     |             NACE C10-S951_X_K — the same population as above)
+     |
+     | !! METHODOLOGY TRAP — READ BEFORE EDITING !!
+     | Eurostat publishes TWO digital-intensity variants on alternating years:
+     |
+     |     E_DI3_GELO → 2021, 2023, 2025   (BG 26.09 / 29.36 / 39.35)
+     |     E_DI4_GELO → 2022, 2024         (BG 48.24 / 50.94)
+     |
+     | They use different criteria and produce very different levels for the
+     | same country. Mixing them into one series — or comparing a value from
+     | one against a value from the other — invents a trend that does not
+     | exist. We use E_DI3 throughout because its years line up exactly with
+     | the AI and cloud series. E_DI4 values are recorded here only so nobody
+     | "helpfully" fills the 2022/2024 gaps with them.
+     |
+     | Cross-check: Eurostat's own Digitalisation in Europe 2026 publication
+     | reports "72% of EU businesses reached a basic level of digital
+     | intensity" for 2025, matching E_DI3_GELO EU27 = 72.11.
      */
     'digital_intensity' => [
         'dataset' => 'isoc_e_dii',
-        'indicator' => 'E_DI4_GELO',
+        'indicator' => 'E_DI3_GELO',
         'source_url' => 'https://ec.europa.eu/eurostat/databrowser/view/isoc_e_dii/default/table',
+        'extracted_on' => '2026-07-22',
+
         'series' => [
+            2021 => ['bg' => 26.09, 'eu' => 55.75],
+            2023 => ['bg' => 29.36, 'eu' => 58.87],
+            2025 => ['bg' => 39.35, 'eu' => 72.11],
+        ],
+
+        // Do NOT plot these against the series above. Different methodology.
+        'alternate_methodology_e_di4' => [
             2022 => ['bg' => 48.24, 'eu' => 69.82],
             2024 => ['bg' => 50.94, 'eu' => 73.65],
         ],
