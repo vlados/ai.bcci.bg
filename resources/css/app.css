@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+@source '../views';
+@source '../../app/Livewire';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/*
+| Design tokens ported verbatim from the approved AI Council design
+| (Съвет по изкуствен интелект — БТПП). Tailwind v4 turns each --color-*
+| into utilities: text-brand, bg-paper, border-line, etc.
+*/
+@theme {
+    --color-brand: #ee272f;
+    --color-brand-dark: #d01920;
+    --color-ink: #121316;
+    --color-ink-soft: #37383c;
+    --color-body: #4a4b50;
+    --color-muted: #6a6b70;
+    --color-faint: #8a8b8f;
+    --color-line: #e6e4df;
+    --color-paper: #f6f5f2;
+    --color-footer-field: #1d1e22;
+
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'PT Serif', Georgia, serif;
+}
+
+/* Prose defaults for rich-text bodies (news, page bodies). */
+.rich p { margin-block: 0.75rem; line-height: 1.7; }
+.rich a { color: var(--color-brand); text-decoration: underline; }
+.rich strong { font-weight: 600; }
+.rich ul { list-style: disc; padding-inline-start: 1.4rem; margin-block: 0.75rem; }
+.rich ol { list-style: decimal; padding-inline-start: 1.4rem; margin-block: 0.75rem; }
+.rich h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; }
+.rich h3 { font-size: 1.2rem; font-weight: 700; margin-top: 1.25rem; }
