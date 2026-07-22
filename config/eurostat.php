@@ -47,9 +47,66 @@ return [
             2025 => ['bg' => 8.55, 'eu' => 19.95],
         ],
 
-        // Ceiling for bar heights. EU 2025 (19.95) sits just under it, so the
-        // bars read as a true proportion rather than a rescaled one.
-        'scale_max' => 20,
+        /*
+         | Top of the y-axis, in percentage points.
+         |
+         | This is 100 and must stay 100. These are shares of a population, so a
+         | bar has to fill the fraction of the track that it actually represents:
+         | 8.55% fills 8.55% of the column. Compressing the axis to ~20 made the
+         | EU bar fill its whole track, which reads as "all of them" at a glance
+         | however the number underneath is labelled — the same kind of visual
+         | lie as the invented curve this chart replaced.
+         */
+        'axis_max' => 100,
+    ],
+
+    /*
+     | Share of enterprises buying paid cloud computing services.
+     |
+     | Dataset:    isoc_cicce_use (indicator E_CC, unit PC_ENT)
+     | Population: IDENTICAL to the AI series above — 10+ persons employed,
+     |             NACE Rev. 2 C10-S951_X_K. That is what makes the two
+     |             directly comparable; do not swap in a different size class.
+     | Note:       observations exist for 2021, 2023 and 2025, which line up
+     |             with three of the four AI years. There is no 2024 cloud
+     |             observation, so both series are shown for 2021/2023/2025.
+     |
+     | Included because it tests the obvious explanation for the AI gap. It
+     | does not support it: Bulgaria is further behind on cloud (34% of the EU
+     | level in 2025) than on AI (43%), and its cloud adoption barely moved
+     | between 2023 and 2025 while the EU gained more than seven points.
+     */
+    'cloud_adoption' => [
+        'dataset' => 'isoc_cicce_use',
+        'indicator' => 'E_CC',
+        'source_url' => 'https://ec.europa.eu/eurostat/databrowser/view/isoc_cicce_use/default/table',
+        'extracted_on' => '2026-07-22',
+
+        'series' => [
+            2021 => ['bg' => 12.79, 'eu' => 40.97],
+            2023 => ['bg' => 17.50, 'eu' => 45.32],
+            2025 => ['bg' => 17.83, 'eu' => 52.74],
+        ],
+    ],
+
+    /*
+     | Enterprises with at least a basic level of digital intensity (DII ≥ 4 of
+     | 12 criteria) — the Digital Decade headline indicator.
+     |
+     | Dataset:    isoc_e_dii (indicator E_DI4_GELO, unit PC_ENT, GE10)
+     | Note:       biennial; only 2022 and 2024 exist on this methodology, so
+     |             it cannot be plotted against the AI years and is quoted in
+     |             prose instead. Earlier E_DI/E_DI3 series use a different
+     |             definition and are NOT comparable.
+     */
+    'digital_intensity' => [
+        'dataset' => 'isoc_e_dii',
+        'indicator' => 'E_DI4_GELO',
+        'source_url' => 'https://ec.europa.eu/eurostat/databrowser/view/isoc_e_dii/default/table',
+        'series' => [
+            2022 => ['bg' => 48.24, 'eu' => 69.82],
+            2024 => ['bg' => 50.94, 'eu' => 73.65],
+        ],
     ],
 
     /*

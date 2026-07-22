@@ -109,79 +109,62 @@
         </div>
     @endif
 
-    {{-- AI adoption, Bulgaria vs the EU-27. Real Eurostat figures — see
-         config/eurostat.php for the dataset, population and caveats. --}}
+    {{-- AI adoption vs cloud adoption, Bulgaria against the EU-27.
+         Real Eurostat figures on a shared 0-100% axis and an identical
+         population, so the two panels can be read against each other.
+         See config/eurostat.php for datasets, definitions and caveats. --}}
     @php
-        $adoption = config('eurostat.ai_adoption');
-        $scale = $adoption['scale_max'];
-        $latest = $adoption['series'][2025];
-        // Bulgarian writes decimals with a comma: 8,55% not 8.55%.
-        $num = fn ($v) => $loc === 'bg' ? str_replace('.', ',', (string) $v) : (string) $v;
+        $ai = config('eurostat.ai_adoption');
+        $cloud = config('eurostat.cloud_adoption');
+        $dii = config('eurostat.digital_intensity');
+        $aiNow = $ai['series'][2025];
+        $cloudNow = $cloud['series'][2025];
+        $diiNow = $dii['series'][2024];
+        // Two decimals throughout so the columns read evenly (17,50 not 17,5),
+        // and a comma for Bulgarian, which is its decimal separator.
+        $num = fn ($v) => number_format((float) $v, 2, $loc === 'bg' ? ',' : '.', '');
+        // Only the years both indicators actually observe.
+        $aiShared = array_intersect_key($ai['series'], $cloud['series']);
     @endphp
-    <div class="reveal chart max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-16 items-center">
+    <div class="reveal chart max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-14 items-center">
         <div>
-            <h2 class="text-2xl lg:text-3xl font-bold mb-4">{{ __('Българският бизнес е под половината от средното за ЕС') }}</h2>
+            <h2 class="text-2xl lg:text-3xl font-bold mb-4">{{ __('Проблемът не е само в изкуствения интелект') }}</h2>
             <p class="text-[16.5px] leading-[1.7] text-body mb-4">
-                {{ __('През 2025 г. изкуствен интелект използват :bg% от българските предприятия с 10 и повече заети, при :eu% средно за ЕС. Разстоянието не се стопява, а се разширява.', ['bg' => $num($latest['bg']), 'eu' => $num($latest['eu'])]) }}
+                {{ __('През 2025 г. изкуствен интелект използват :bg% от българските предприятия с 10 и повече заети, при :eu% средно за ЕС. Но изоставането в облачните услуги — основата, върху която се гради работещ AI — е още по-голямо: :cbg% срещу :ceu%.', ['bg' => $num($aiNow['bg']), 'eu' => $num($aiNow['eu']), 'cbg' => $num($cloudNow['bg']), 'ceu' => $num($cloudNow['eu'])]) }}
+            </p>
+            <p class="text-[14.5px] leading-[1.6] text-muted mb-4">
+                {{ __('Между 2023 и 2025 г. използването на облачни услуги в България се задържа на място, докато ЕС добавя над седем пункта. За сравнение, поне базово ниво на дигитализация имат :dbg% от българските и :deu% от европейските предприятия през 2024 г.', ['dbg' => $num($diiNow['bg']), 'deu' => $num($diiNow['eu'])]) }}
             </p>
             <p class="text-[14.5px] leading-[1.6] text-muted mb-6">
-                {{ __('Националното проучване на Съвета ще покаже какво стои зад тази цифра — кои процеси, кои пречки и кои сектори.') }}
+                {{ __('Националното проучване на Съвета ще покаже какво стои зад тези цифри — кои процеси, кои пречки и кои сектори.') }}
             </p>
             <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-[15px] font-semibold text-brand-dark">{{ __('Към проучването') }} →</a>
         </div>
         <div>
-            <div class="flex items-center gap-5 mb-4 text-[12.5px]">
+            <div class="flex items-center gap-5 mb-5 text-[12.5px]">
                 <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-brand block"></span>{{ __('България') }}</span>
-                <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-ink block"></span>{{ __('ЕС-27') }}</span>
+                <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-eu block"></span>{{ __('ЕС-27') }}</span>
+                <span class="text-faint">{{ __('% от предприятията') }}</span>
             </div>
 
-            {{-- aria-hidden: the equivalent table below carries the same data
-                 for anyone who cannot read the bars. --}}
-            <div aria-hidden="true" class="flex items-end gap-3 sm:gap-6 h-[230px] lg:h-[270px]">
-                @foreach ($adoption['series'] as $year => $v)
-                    <div class="flex-1 flex flex-col items-center gap-1.5 h-full">
-                        <div class="w-full flex-1 flex items-end gap-1">
-                            <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
-                                <div class="bar w-full bg-brand" style="--h: {{ round($v['bg'] / $scale * 100, 1) }}%"></div>
-                            </div>
-                            <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
-                                <div class="bar w-full bg-ink" style="--h: {{ round($v['eu'] / $scale * 100, 1) }}%"></div>
-                            </div>
-                        </div>
-                        {{-- The values themselves, under the bar each belongs to.
-                             tabular-nums so the columns line up. --}}
-                        <div class="w-full flex gap-1 text-[11.5px] lg:text-[12.5px] font-semibold tabular-nums">
-                            <span class="w-1/2 text-center text-brand-dark">{{ $num($v['bg']) }}%</span>
-                            <span class="w-1/2 text-center text-ink">{{ $num($v['eu']) }}%</span>
-                        </div>
-                        <span class="text-[12px] text-faint">{{ $year }}</span>
-                    </div>
-                @endforeach
+            <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
+                @include('partials.bar-panel', [
+                    'title' => __('Изкуствен интелект'),
+                    'series' => $aiShared,
+                    'caption' => __('Дял на предприятията с 10 и повече заети, използващи поне една технология на изкуствен интелект'),
+                    'num' => $num,
+                ])
+                @include('partials.bar-panel', [
+                    'title' => __('Облачни услуги'),
+                    'series' => $cloud['series'],
+                    'caption' => __('Дял на предприятията с 10 и повече заети, купуващи облачни услуги'),
+                    'num' => $num,
+                ])
             </div>
 
-            <table class="sr-only">
-                <caption>{{ __('Дял на предприятията с 10 и повече заети, използващи поне една технология на изкуствен интелект') }}</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">{{ __('Година') }}</th>
-                        <th scope="col">{{ __('България') }}</th>
-                        <th scope="col">{{ __('ЕС-27') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($adoption['series'] as $year => $v)
-                        <tr>
-                            <th scope="row">{{ $year }}</th>
-                            <td>{{ $num($v['bg']) }}%</td>
-                            <td>{{ $num($v['eu']) }}%</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <p class="text-[12.5px] text-faint mt-3 leading-[1.5]">
-                {{ __('Източник: Евростат, :dataset (предприятия с 10+ заети, без селско стопанство, добив и финансов сектор). Няма наблюдение за 2022 г. От 2025 г. показателят обхваща осем технологии вместо седем.', ['dataset' => $adoption['dataset']]) }}
-                <a href="{{ $adoption['source_url'] }}" rel="nofollow noopener" target="_blank" class="underline hover:text-ink">{{ __('Данните') }}</a>
+            <p class="text-[12.5px] text-faint mt-4 leading-[1.5]">
+                {{ __('Източник: Евростат, :ai и :cloud — предприятия с 10+ заети, без селско стопанство, добив и финансов сектор. От 2025 г. показателят за AI обхваща осем технологии вместо седем.', ['ai' => $ai['dataset'], 'cloud' => $cloud['dataset']]) }}
+                <a href="{{ $ai['source_url'] }}" rel="nofollow noopener" target="_blank" class="underline hover:text-ink">{{ __('Данните') }}</a>
             </p>
         </div>
     </div>

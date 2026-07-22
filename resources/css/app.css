@@ -25,6 +25,9 @@
     --color-paper: #f6f5f2;
     --color-footer-field: #1d1e22;
 
+    /* EU institutional blue (Pantone Reflex Blue), for the EU-27 data series. */
+    --color-eu: #003399;
+
     --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'PT Serif', Georgia, serif;
     --font-display: 'Roboto Condensed', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
