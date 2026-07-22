@@ -61,7 +61,11 @@
         </div>
     </div>
 
-    <table class="sr-only">
+    {{-- sr-only goes on a wrapper, never on the <table> itself: a table cannot
+         be laid out narrower than its min-content width, so `width: 1px` is
+         ignored and the table stays full size — silently widening the page. --}}
+    <div class="sr-only">
+    <table>
         <caption>{{ $caption }}</caption>
         <thead>
             <tr>
@@ -80,4 +84,5 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 </div>
