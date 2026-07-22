@@ -17,7 +17,7 @@
                 <span class="dot dot-pulse shrink-0"></span>
                 <span class="text-[13.5px] font-bold tracking-[2.2px] text-brand">{{ $page->get('hero_eyebrow') }}</span>
             </div>
-            <h1 class="text-[34px] sm:text-[44px] lg:text-[52px] leading-[1.12] font-bold text-ink mb-[26px] tracking-[-0.5px] text-pretty">{{ $titleHead }}@if ($titleTail) <span class="text-brand">{{ $titleTail }}</span>@endif</h1>
+            <h1 class="uppercase text-[38px] sm:text-[56px] lg:text-[70px] leading-[1.02] font-bold text-ink mb-7 tracking-[-0.01em] text-pretty">{{ $titleHead }} @if ($titleTail)<span class="text-brand">{{ $titleTail }}</span>@endif</h1>
             <p class="text-lg leading-[1.65] text-body mb-9 max-w-[620px]">{{ $page->get('hero_intro') }}</p>
             <div class="flex gap-3.5 flex-wrap">
                 <a href="{{ route($loc.'.survey') }}" wire:navigate class="bg-brand text-white px-[26px] py-[15px] font-semibold text-[15.5px] hover:bg-brand-dark">{{ $page->get('cta_primary') }}</a>
@@ -30,9 +30,6 @@
                 @if ($heroImage)
                     <img src="{{ $heroImage }}" alt="{{ $page->get('hero_title') }}" loading="lazy" class="photo w-full h-full object-cover block">
                 @endif
-                <span class="absolute top-4 left-4 inline-flex items-center gap-2 bg-ink/90 backdrop-blur-sm text-white text-[11px] font-bold tracking-[1.6px] uppercase px-3 py-1.5 font-display">
-                    <span class="dot"></span>AI Council
-                </span>
             </div>
         </div>
     </div>
