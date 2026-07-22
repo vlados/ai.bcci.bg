@@ -137,9 +137,9 @@
 
             {{-- aria-hidden: the equivalent table below carries the same data
                  for anyone who cannot read the bars. --}}
-            <div aria-hidden="true" class="flex items-end gap-3 sm:gap-6 h-[200px] lg:h-[240px]">
+            <div aria-hidden="true" class="flex items-end gap-3 sm:gap-6 h-[230px] lg:h-[270px]">
                 @foreach ($adoption['series'] as $year => $v)
-                    <div class="flex-1 flex flex-col items-center gap-2 h-full">
+                    <div class="flex-1 flex flex-col items-center gap-1.5 h-full">
                         <div class="w-full flex-1 flex items-end gap-1">
                             <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
                                 <div class="bar w-full bg-brand" style="--h: {{ round($v['bg'] / $scale * 100, 1) }}%"></div>
@@ -147,6 +147,12 @@
                             <div class="w-1/2 h-full flex items-end bg-[#F2F1ED]">
                                 <div class="bar w-full bg-ink" style="--h: {{ round($v['eu'] / $scale * 100, 1) }}%"></div>
                             </div>
+                        </div>
+                        {{-- The values themselves, under the bar each belongs to.
+                             tabular-nums so the columns line up. --}}
+                        <div class="w-full flex gap-1 text-[11.5px] lg:text-[12.5px] font-semibold tabular-nums">
+                            <span class="w-1/2 text-center text-brand-dark">{{ $num($v['bg']) }}%</span>
+                            <span class="w-1/2 text-center text-ink">{{ $num($v['eu']) }}%</span>
                         </div>
                         <span class="text-[12px] text-faint">{{ $year }}</span>
                     </div>
