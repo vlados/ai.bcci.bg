@@ -10,7 +10,7 @@ class NewsArticle extends Model
     use HasTranslations;
 
     protected $fillable = [
-        'slug', 'title', 'excerpt', 'body', 'image',
+        'slug', 'title', 'excerpt', 'body', 'image', 'image_url',
         'meta_title', 'meta_description', 'published_at', 'is_published',
     ];
 
@@ -32,5 +32,15 @@ class NewsArticle extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    /** Resolved cover image: an uploaded file, else an external URL, else null. */
+    public function imageUrl(): ?string
+    {
+        if ($this->image) {
+            return asset('storage/'.$this->image);
+        }
+
+        return $this->image_url ?: null;
     }
 }

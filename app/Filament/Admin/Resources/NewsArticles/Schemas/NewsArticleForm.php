@@ -26,7 +26,9 @@ class NewsArticleForm
                     ->maxLength(255)
                     ->helperText('Използва се в адреса: /news/{slug}'),
                 DatePicker::make('published_at')->label('Дата на публикуване')->required()->default(now()),
-                FileUpload::make('image')->label('Изображение')->image()->imageEditor()->directory('news')->columnSpanFull(),
+                FileUpload::make('image')->label('Изображение (качване)')->image()->imageEditor()->directory('news')->columnSpanFull(),
+                TextInput::make('image_url')->label('или URL на изображение')->url()->columnSpanFull()
+                    ->helperText('Използва се, ако не е качено изображение.'),
                 Toggle::make('is_published')->label('Публикувана')->default(true),
             ])->columns(2),
 

@@ -55,6 +55,7 @@ class SiteSeeder extends Seeder
                 'hero_eyebrow' => $t('СЪВЕТ ПО ИЗКУСТВЕН ИНТЕЛЕКТ КЪМ БТПП', 'AI COUNCIL AT BCCI'),
                 'hero_title' => $t('Изкуственият интелект отдавна не е бъдещето. Той е настоящето.', 'Artificial intelligence is no longer the future. It is the present.'),
                 'hero_intro' => $t('Работим за повишаване на конкурентоспособността на българския бизнес и за позиционирането на България сред лидерите в една от най-перспективните области на иновациите.', 'We work to strengthen the competitiveness of Bulgarian business and to position Bulgaria among the leaders in one of today’s most promising fields of innovation.'),
+                'hero_image' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=70',
                 'cta_primary' => $t('Участвайте в проучването', 'Take part in the survey'),
                 'cta_secondary' => $t('За Съвета', 'About the Council'),
                 'pillars_title' => $t('ТРИ НАПРАВЛЕНИЯ', 'THREE PILLARS'),
@@ -62,6 +63,13 @@ class SiteSeeder extends Seeder
                     ['num' => '01', 'title' => $t('Конкурентоспособност на бизнеса', 'Business competitiveness'), 'text' => $t('Консултации, експертиза и подкрепа за успешното внедряване на AI.', 'Consulting, expertise and support for successful AI adoption.')],
                     ['num' => '02', 'title' => $t('Образование и човешки капацитет', 'Education and human capacity'), 'text' => $t('Партньорства с университети, обучения и менторски програми.', 'University partnerships, trainings and mentorship programmes.')],
                     ['num' => '03', 'title' => $t('Технологична политика', 'Technology policy'), 'text' => $t('Становища по регулаторни инициативи на национално и европейско ниво.', 'Positions on regulatory initiatives at national and European level.')],
+                ],
+                'process_title' => $t('Как работи Съветът', 'How the Council works'),
+                'process' => [
+                    ['num' => '01 →', 'title' => $t('Питате', 'You ask'), 'text' => $t('Изпращате ни въпрос или конкретен казус от вашия бизнес.', 'You send us a question or a specific case from your business.')],
+                    ['num' => '02 →', 'title' => $t('Свързваме', 'We connect'), 'text' => $t('Насочваме ви към подходящия експерт от мрежата на Съвета.', 'We point you to the right expert from the Council’s network.')],
+                    ['num' => '03 →', 'title' => $t('Решаваме', 'We solve'), 'text' => $t('Заедно търсим решение, което повишава ефективността ви.', 'Together we find a solution that raises your efficiency.')],
+                    ['num' => '04', 'title' => $t('Споделяме', 'We share'), 'text' => $t('Натрупаното знание става достъпно за всички — чрез новини и становища.', 'The accumulated knowledge becomes available to everyone — through news and positions.')],
                 ],
                 'intro_title' => $t('Хора и технологии, заедно', 'People and technology, together'),
                 'intro_body' => $t(
@@ -256,6 +264,13 @@ class SiteSeeder extends Seeder
             ],
         ];
 
+        // Illustrative stock images (from the design). Replace with real uploads later.
+        $images = [
+            'stanovishte-ai-act' => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=70',
+            'natsionalno-prouchvane-ai' => 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=70',
+            'partnyorstvo-universiteti' => 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=70',
+        ];
+
         foreach ($news as $n) {
             NewsArticle::updateOrCreate(
                 ['slug' => $n['slug']],
@@ -263,6 +278,7 @@ class SiteSeeder extends Seeder
                     'title' => $n['title'],
                     'excerpt' => $n['excerpt'],
                     'body' => $n['body'],
+                    'image_url' => $images[$n['slug']] ?? null,
                     'published_at' => $n['date'],
                     'is_published' => true,
                 ],

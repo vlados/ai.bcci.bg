@@ -95,10 +95,17 @@ return [
             'hero_eyebrow'   => ['type' => 'text',     'label' => 'Хиро — надзаглавие', 'translatable' => true],
             'hero_title'     => ['type' => 'textarea', 'label' => 'Хиро — заглавие', 'translatable' => true],
             'hero_intro'     => ['type' => 'textarea', 'label' => 'Хиро — текст', 'translatable' => true],
+            'hero_image'     => ['type' => 'url',      'label' => 'Хиро — изображение (URL)'],
             'cta_primary'    => ['type' => 'text',     'label' => 'Бутон 1', 'translatable' => true],
             'cta_secondary'  => ['type' => 'text',     'label' => 'Бутон 2', 'translatable' => true],
             'pillars_title'  => ['type' => 'text',     'label' => 'Направления — заглавие на панела', 'translatable' => true],
             'pillars'        => ['type' => 'list',     'label' => 'Три направления', 'fields' => [
+                'num'   => ['type' => 'text',     'label' => '№'],
+                'title' => ['type' => 'text',     'label' => 'Заглавие', 'translatable' => true],
+                'text'  => ['type' => 'textarea', 'label' => 'Текст', 'translatable' => true],
+            ]],
+            'process_title'  => ['type' => 'text',     'label' => 'Как работи Съветът — заглавие', 'translatable' => true],
+            'process'        => ['type' => 'list',     'label' => 'Как работи Съветът (стъпки)', 'fields' => [
                 'num'   => ['type' => 'text',     'label' => '№'],
                 'title' => ['type' => 'text',     'label' => 'Заглавие', 'translatable' => true],
                 'text'  => ['type' => 'textarea', 'label' => 'Текст', 'translatable' => true],
