@@ -36,7 +36,7 @@
                 @foreach ($team as $member)
                     <div class="group lift border border-line">
                         @if ($member->photo)
-                            <img src="{{ asset('storage/'.$member->photo) }}" alt="{{ $member->name }}" class="photo h-[300px] w-full object-cover">
+                            <img src="{{ asset('storage/'.$member->photo) }}" alt="" loading="lazy" decoding="async" class="photo h-[300px] w-full object-cover">
                         @else
                             <div class="h-[300px] bg-[#E8E7E2] flex items-center justify-center text-[13px] text-[#9C9D9F]">{{ __('Снимка') }}</div>
                         @endif

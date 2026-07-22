@@ -13,7 +13,12 @@
             <article data-morph-card class="reveal group lift border border-line grid lg:grid-cols-[320px_1fr]">
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block min-h-[220px] bg-[#E8E7E2] relative overflow-hidden">
                     @if ($article->imageUrl())
-                        <img data-morph src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}" loading="lazy" class="photo absolute inset-0 w-full h-full object-cover">
+                        {{-- The first card is above the fold and is usually the LCP
+                             element on this page, so it must not be lazy-loaded. --}}
+                        <img data-morph src="{{ $article->imageUrl() }}" alt=""
+                             loading="{{ $loop->first ? 'eager' : 'lazy' }}"
+                             @if ($loop->first) fetchpriority="high" @endif decoding="async"
+                             class="photo absolute inset-0 w-full h-full object-cover">
                     @else
                         <span class="absolute inset-0 flex items-center justify-center text-[13px] text-[#9C9D9F]">{{ __('Изображение') }}</span>
                     @endif

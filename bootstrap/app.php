@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,8 +16,21 @@ return Application::configure(basePath: dirname(__DIR__))
         // Runs for every web request — including Livewire's POST /livewire/update —
         // so the chosen locale survives interactions, not just full-page loads.
         $middleware->web(append: [
-            \App\Http\Middleware\SetLocale::class,
+            SetLocale::class,
         ]);
+
+        // Behind Caddy, honour the forwarded scheme so canonical/hreflang/OG
+        // URLs are built as https rather than the http seen on the socket.
+        $middleware->trustProxies(at: '*');
+
+        // Without this, any Host header that reaches the app mints a complete,
+        // self-consistent set of canonical/hreflang/JSON-LD URLs for itself —
+        // i.e. an instant duplicate of the whole site on any hostname pointed
+        // at the server. Resolved lazily so config is available, and Laravel
+        // skips the check in local/testing.
+        $middleware->trustHosts(at: fn () => array_filter([
+            config('site.seo.production_host'),
+        ]), subdomains: false);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

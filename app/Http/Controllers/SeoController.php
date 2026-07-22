@@ -14,13 +14,23 @@ use Illuminate\Http\Response;
 */
 class SeoController extends Controller
 {
+    /**
+     * robots.txt.
+     *
+     * Deliberately does NOT disallow /livewire. robots.txt matching is a plain
+     * prefix match, and Livewire serves its runtime from a hashed sibling path
+     * (/livewire-<hash>/livewire.js), so that rule silently blocked the site's
+     * own JavaScript from every crawler. The only other thing under the prefix
+     * is the update endpoint, which is POST-only and 405s on GET — there is
+     * nothing there for a crawler to reach.
+     */
     public function robots(): Response
     {
         $lines = [
             'User-agent: *',
             'Allow: /',
             'Disallow: /admin',
-            'Disallow: /livewire',
+            'Disallow: /up',
             '',
             // Static file, written by the scheduled `seo:generate` command.
             'Sitemap: '.url('/sitemap.xml'),

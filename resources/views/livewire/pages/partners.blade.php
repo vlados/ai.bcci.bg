@@ -17,7 +17,7 @@
                     @if ($partner->url)
                         <a href="{{ $partner->url }}" target="_blank" rel="noopener" class="{{ $box }} hover:border-ink">
                             @if ($partner->logo)
-                                <img src="{{ asset('storage/'.$partner->logo) }}" alt="{{ $partner->name }}" class="max-h-[70px] max-w-full object-contain">
+                                <img src="{{ asset('storage/'.$partner->logo) }}" alt="{{ $partner->name }}" loading="lazy" decoding="async" class="max-h-[70px] max-w-full object-contain">
                             @else
                                 <span class="text-[15px] font-semibold text-ink-soft text-center">{{ $partner->name }}</span>
                             @endif
@@ -25,7 +25,7 @@
                     @else
                         <div class="{{ $box }}">
                             @if ($partner->logo)
-                                <img src="{{ asset('storage/'.$partner->logo) }}" alt="{{ $partner->name }}" class="max-h-[70px] max-w-full object-contain">
+                                <img src="{{ asset('storage/'.$partner->logo) }}" alt="{{ $partner->name }}" loading="lazy" decoding="async" class="max-h-[70px] max-w-full object-contain">
                             @else
                                 <span class="text-[15px] font-semibold text-ink-soft text-center">{{ $partner->name }}</span>
                             @endif

@@ -11,9 +11,15 @@
     <article class="max-w-[820px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
         @if ($article->imageUrl())
             {{-- Receives the card image that was clicked on the news index; the
-                 name is unique here, so it can stay in the markup. --}}
-            <img src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}"
-                 style="view-transition-name: article-hero" class="w-full mb-10 border border-line">
+                 name is unique here, so it can stay in the markup.
+
+                 The fixed aspect ratio does double duty: it reserves the box so
+                 the image cannot shift the article text down as it decodes, and
+                 it gives the view transition a stable target — without it the
+                 morph briefly collapsed to a zero-height line before popping. --}}
+            <img src="{{ $article->imageUrl() }}" alt="" loading="eager" fetchpriority="high" decoding="async"
+                 style="view-transition-name: article-hero"
+                 class="w-full aspect-[3/2] object-cover mb-10 border border-line">
         @endif
         @if ($article->tr('excerpt'))
             <p class="text-[19px] leading-[1.6] text-ink-soft font-medium mb-8">{{ $article->tr('excerpt') }}</p>

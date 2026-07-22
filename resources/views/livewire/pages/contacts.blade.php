@@ -12,29 +12,38 @@
         <form wire:submit="submit" class="border border-line px-5 py-6 sm:px-10 sm:pt-9 sm:pb-10">
             <h2 class="text-2xl font-bold mb-6">{{ $page->get('form_title') }}</h2>
 
+            {{-- role="status" so the confirmation is announced, not just shown. --}}
             @if ($sent)
-                <div class="mb-6 border border-brand bg-[#FDF3F3] text-ink-soft px-4 py-3 text-[15px]">
+                <div role="status" class="mb-6 border border-brand bg-[#FDF3F3] text-ink-soft px-4 py-3 text-[15px]">
                     {{ __('Благодарим ви! Съобщението беше изпратено.') }}
                 </div>
             @endif
 
+            {{-- Every field carries a real <label>: a placeholder is not an
+                 accessible name, and it vanishes the moment you start typing. --}}
             <div class="grid gap-4">
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <input type="text" wire:model="name" placeholder="{{ __('Вашето име') }}"
-                               class="border border-[#C9C8C3] px-4 py-[13px] text-[15px] outline-none w-full placeholder:text-[#9C9DA1] focus:border-ink">
-                        @error('name') <span class="text-brand text-[13px] mt-1 block">{{ $message }}</span> @enderror
+                        <label for="contact-name" class="block text-[13.5px] font-semibold mb-1.5">{{ __('Вашето име') }}</label>
+                        <input type="text" id="contact-name" wire:model="name" autocomplete="name"
+                               @error('name') aria-invalid="true" aria-describedby="contact-name-error" @enderror
+                               class="border border-muted px-4 py-[13px] text-[15px] w-full focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+                        @error('name') <span id="contact-name-error" class="text-brand-dark text-[13px] mt-1 block">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <input type="email" wire:model="email" placeholder="{{ __('Вашият имейл') }}"
-                               class="border border-[#C9C8C3] px-4 py-[13px] text-[15px] outline-none w-full placeholder:text-[#9C9DA1] focus:border-ink">
-                        @error('email') <span class="text-brand text-[13px] mt-1 block">{{ $message }}</span> @enderror
+                        <label for="contact-email" class="block text-[13.5px] font-semibold mb-1.5">{{ __('Вашият имейл') }}</label>
+                        <input type="email" id="contact-email" wire:model="email" autocomplete="email"
+                               @error('email') aria-invalid="true" aria-describedby="contact-email-error" @enderror
+                               class="border border-muted px-4 py-[13px] text-[15px] w-full focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+                        @error('email') <span id="contact-email-error" class="text-brand-dark text-[13px] mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div>
-                    <textarea wire:model="message" placeholder="{{ __('Вашето съобщение') }}" rows="6"
-                              class="border border-[#C9C8C3] px-4 py-[13px] text-[15px] outline-none resize-y w-full placeholder:text-[#9C9DA1] focus:border-ink"></textarea>
-                    @error('message') <span class="text-brand text-[13px] mt-1 block">{{ $message }}</span> @enderror
+                    <label for="contact-message" class="block text-[13.5px] font-semibold mb-1.5">{{ __('Вашето съобщение') }}</label>
+                    <textarea id="contact-message" wire:model="message" rows="6"
+                              @error('message') aria-invalid="true" aria-describedby="contact-message-error" @enderror
+                              class="border border-muted px-4 py-[13px] text-[15px] resize-y w-full focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"></textarea>
+                    @error('message') <span id="contact-message-error" class="text-brand-dark text-[13px] mt-1 block">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <button type="submit" class="bg-brand text-white px-[26px] py-3.5 font-semibold text-[15px] hover:bg-brand-dark">

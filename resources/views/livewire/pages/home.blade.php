@@ -28,7 +28,10 @@
             <div aria-hidden="true" class="hidden lg:block absolute -bottom-5 -right-5 w-44 h-44 border-[3px] border-brand"></div>
             <div class="relative h-full min-h-[260px] sm:min-h-[340px] bg-[#E8E7E2] overflow-hidden">
                 @if ($heroImage)
-                    <img src="{{ $heroImage }}" alt="{{ $page->get('hero_title') }}" loading="lazy" class="photo w-full h-full object-cover block">
+                    {{-- This is the LCP element: eager + high priority, never lazy.
+                         alt="" because the adjacent h1 already carries the meaning. --}}
+                    <img src="{{ $heroImage }}" alt="" loading="eager" fetchpriority="high" decoding="async"
+                         class="photo w-full h-full object-cover block">
                 @endif
             </div>
         </div>
@@ -139,7 +142,7 @@
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="group lift border border-line block hover:border-ink">
                     <div class="h-[180px] overflow-hidden bg-[#E8E7E2]">
                         @if ($article->imageUrl())
-                            <img src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}" loading="lazy" class="photo w-full h-full object-cover block">
+                            <img src="{{ $article->imageUrl() }}" alt="" loading="lazy" decoding="async" class="photo w-full h-full object-cover block">
                         @endif
                     </div>
                     <div class="px-[26px] pt-6 pb-7">

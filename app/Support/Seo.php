@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Models\Page;
-use Illuminate\Support\Facades\Route;
 
 /**
  * Request-scoped SEO/GEO builder.
@@ -19,15 +18,25 @@ use Illuminate\Support\Facades\Route;
 class Seo
 {
     protected ?string $title = null;
+
     protected bool $appendBrand = true;
+
     protected ?string $description = null;
+
     protected ?string $canonical = null;
+
     protected ?string $image = null;
+
     protected string $type = 'website';
+
     protected bool $noindex = false;
+
     protected ?string $publishedAt = null;
+
     protected ?string $modifiedAt = null;
+
     protected array $breadcrumbs = [];
+
     protected array $extraJsonLd = [];
 
     protected ?Page $global = null;
@@ -99,6 +108,25 @@ class Seo
         return $this;
     }
 
+    /**
+     * Is this request being served from the one host allowed to be indexed?
+     *
+     * Any other host — the dev box, a preview build, a bare IP, a www variant —
+     * serves `noindex` instead, so a staging copy can never be indexed as, or
+     * compete with, the real site. Note this deliberately does NOT also block
+     * crawling via robots.txt: a crawler has to be able to fetch the page in
+     * order to see the noindex, and a robots exclusion alone would still let
+     * the bare URL surface in results.
+     *
+     * A blank `production_host` disables the check, which is an explicit opt-out.
+     */
+    protected function onProductionHost(): bool
+    {
+        $production = config('site.seo.production_host');
+
+        return blank($production) || request()->getHost() === $production;
+    }
+
     // ---- rendering -------------------------------------------------------
 
     public function render(): string
@@ -126,7 +154,7 @@ class Seo
         $out[] = '<title>'.e($title).'</title>';
         $out[] = '<meta name="description" content="'.e($description).'">';
         $out[] = '<link rel="canonical" href="'.e($canonical).'">';
-        $out[] = $this->noindex
+        $out[] = ($this->noindex || ! $this->onProductionHost())
             ? '<meta name="robots" content="noindex, nofollow">'
             : '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">';
 
