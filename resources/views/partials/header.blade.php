@@ -32,7 +32,7 @@
          wire:navigate so it keeps its position to animate FROM. --}}
     @persist('navball')
         <span data-navball aria-hidden="true"
-              class="hidden lg:block pointer-events-none absolute top-2 left-0 h-2.5 w-2.5 rounded-full bg-brand"
+              class="hidden lg:block pointer-events-none absolute top-3.5 left-0 h-2.5 w-2.5 rounded-full bg-brand"
               style="transform: translateX(-9999px)"></span>
     @endpersist
 
