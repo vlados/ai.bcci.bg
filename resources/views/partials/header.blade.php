@@ -5,7 +5,7 @@
             <img src="{{ asset('assets/logo.png') }}" alt="{{ $orgName }}" class="h-9 block w-auto">
         </a>
 
-        <nav class="hidden lg:flex items-center gap-x-4 text-sm font-medium whitespace-nowrap"
+        <nav data-desknav class="hidden lg:flex items-center gap-x-4 text-sm font-medium whitespace-nowrap"
              aria-label="{{ __('Основна навигация') }}">
             @foreach ($nav as $item)
                 @if ($item['key'] === 'contacts')
@@ -14,7 +14,7 @@
                 @else
                     <a href="{{ $item['url'] }}" wire:navigate
                        @if ($item['active']) aria-current="page" @endif
-                       class="relative {{ $item['active'] ? 'text-brand' : 'text-ink-soft' }} hover:text-brand">{{ $item['label'] }}@if ($item['active'])<span class="dot absolute -bottom-2 left-1/2 -translate-x-1/2"></span>@endif</a>
+                       class="{{ $item['active'] ? 'text-brand' : 'text-ink-soft' }} hover:text-brand">{{ $item['label'] }}</a>
                 @endif
             @endforeach
         </nav>
@@ -26,6 +26,15 @@
             <span class="block w-6 h-0.5 bg-ink"></span>
         </button>
     </div>
+
+    {{-- The active-page "ball": rides the top of the nav and bounces to the new
+         item on navigation (driven by resources/js/app.js). Persisted across
+         wire:navigate so it keeps its position to animate FROM. --}}
+    @persist('navball')
+        <span data-navball aria-hidden="true"
+              class="hidden lg:block pointer-events-none absolute top-2 left-0 h-2.5 w-2.5 rounded-full bg-brand"
+              style="transform: translateX(-9999px)"></span>
+    @endpersist
 
     <nav x-show="open" x-cloak class="lg:hidden border-t border-line bg-white" aria-label="{{ __('Основна навигация') }}">
         @foreach ($nav as $item)
