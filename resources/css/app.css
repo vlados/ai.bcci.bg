@@ -81,6 +81,106 @@ h1, h2 { letter-spacing: -0.015em; }
     .motion-on .lift:hover { transform: none !important; }
 }
 
+/*
+| View transitions.
+|
+| Two entry points, because this site navigates two different ways:
+|   - `@view-transition` covers real document navigations — a typed URL, an
+|     external referral, a link without wire:navigate.
+|   - Every internal link uses wire:navigate, which is same-document (fetch +
+|     morph), so those never trigger the at-rule. app.js bridges them by
+|     wrapping the swap in document.startViewTransition().
+|
+| The motion is deliberately quiet — nothing here is longer than ~340ms. A page
+| transition should carry you across, not perform.
+*/
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+}
+
+/*
+| Morph, not slideshow.
+|
+| Anything that exists on both pages gets its own transition name, which lifts
+| it out of the page snapshot and gives it a group of its own. The browser then
+| interpolates that group's position and size between the two layouts — the
+| element travels instead of being cross-faded away and redrawn somewhere else.
+|
+| Chrome (topbar, header, footer) is identical across pages, so its groups are
+| a no-op: it simply holds still while the content changes underneath. That is
+| what stops the page reading as a jump.
+*/
+[data-vt='topbar'] { view-transition-name: vt-topbar; }
+[data-vt='header'] { view-transition-name: vt-header; }
+[data-vt='footer'] { view-transition-name: vt-footer; }
+[data-vt='hero']   { view-transition-name: vt-hero; }
+
+/* Set --vt-scale on <html> to slow every transition down for inspection —
+   e.g. document.documentElement.style.setProperty('--vt-scale', 20). */
+:root { --vt-scale: 1; }
+
+/* One travel curve for every morphing group, so they move as a single system. */
+::view-transition-group(*) {
+    animation-duration: calc(340ms * var(--vt-scale));
+    animation-timing-function: cubic-bezier(.2, .7, .2, 1);
+}
+
+/*
+| Hand off, don't cross-dissolve.
+|
+| Two headings fading through each other at different positions is precisely
+| what reads as a "jump" — the eye sees one word ghosted over another and
+| interprets the difference as movement. So the outgoing copy clears out first
+| and the incoming copy arrives after it has gone: brief, sequential, calm.
+| The boxes keep morphing underneath the whole time.
+*/
+::view-transition-old(root) { animation: vt-fade-out calc(110ms * var(--vt-scale)) ease both; }
+::view-transition-new(root) { animation: vt-fade-in calc(220ms * var(--vt-scale)) ease calc(120ms * var(--vt-scale)) both; }
+
+::view-transition-old(vt-hero) { animation: vt-fade-out calc(100ms * var(--vt-scale)) ease both; }
+::view-transition-new(vt-hero) { animation: vt-fade-in calc(240ms * var(--vt-scale)) ease calc(110ms * var(--vt-scale)) both; }
+
+@keyframes vt-fade-out { to { opacity: 0 } }
+@keyframes vt-fade-in { from { opacity: 0 } }
+
+/* Chrome must not flicker at all — identical pixels, so skip the cross-fade. */
+::view-transition-old(vt-topbar),
+::view-transition-old(vt-header),
+::view-transition-old(vt-footer) { animation: none; opacity: 0; }
+::view-transition-new(vt-topbar),
+::view-transition-new(vt-header),
+::view-transition-new(vt-footer) { animation: none; opacity: 1; }
+
+/*
+| The one flourish: a news card's image morphs into the article's hero image.
+| This is the case view transitions genuinely earn — it carries the thing you
+| clicked across the navigation so you keep your bearings.
+|
+| The name is applied to a single card at click time (see app.js), never in the
+| markup: `view-transition-name` must be unique, and a list of ten cards all
+| claiming one name aborts the whole transition.
+*/
+::view-transition-group(article-hero) { animation-duration: calc(380ms * var(--vt-scale)); }
+
+/* Card art is cover-cropped at 320px; the hero is full-bleed. Without this the
+   two snapshots stretch to each other's box and the morph looks rubbery. */
+::view-transition-old(article-hero),
+::view-transition-new(article-hero) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* The classic View Transitions trap: snapshots spill outside their group box. */
+::view-transition-image-pair(article-hero) { overflow: hidden; }
+
+/* Belt-and-braces, matching the rest of the motion system above. */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) { animation: none !important; }
+}
+
 /* Prose defaults for rich-text bodies (news, page bodies). */
 .rich p { margin-block: 0.75rem; line-height: 1.7; }
 .rich a { color: var(--color-brand); text-decoration: underline; }
@@ -89,3 +189,4 @@ h1, h2 { letter-spacing: -0.015em; }
 .rich ol { list-style: decimal; padding-inline-start: 1.4rem; margin-block: 0.75rem; }
 .rich h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; }
 .rich h3 { font-size: 1.2rem; font-weight: 700; margin-top: 1.25rem; }
+

@@ -1,6 +1,6 @@
 @php $loc = app()->getLocale(); @endphp
 <div>
-    <div class="bg-paper border-b border-line">
+    <div data-vt="hero" class="bg-paper border-b border-line">
         <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
             <div class="text-[13.5px] font-bold tracking-[2.2px] text-brand mb-4">{{ $page->get('hero_eyebrow') }}</div>
             <h1 class="text-[30px] sm:text-4xl lg:text-[42px] font-bold tracking-[-0.5px] mb-[18px] max-w-[900px] text-pretty leading-tight">{{ $page->get('hero_title') }}</h1>

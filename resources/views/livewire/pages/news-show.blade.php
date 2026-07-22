@@ -1,6 +1,6 @@
 @php $loc = app()->getLocale(); @endphp
 <div>
-    <div class="bg-paper border-b border-line">
+    <div data-vt="hero" class="bg-paper border-b border-line">
         <div class="max-w-[820px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
             <a href="{{ route($loc.'.news') }}" wire:navigate class="text-[13.5px] font-bold tracking-[2.2px] text-brand mb-4 inline-block">← {{ __('Новини') }}</a>
             <div class="text-[13px] text-faint mb-3">{{ $article->published_at?->translatedFormat('j F Y') }}</div>
@@ -10,7 +10,10 @@
 
     <article class="max-w-[820px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
         @if ($article->imageUrl())
-            <img src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}" class="w-full mb-10 border border-line">
+            {{-- Receives the card image that was clicked on the news index; the
+                 name is unique here, so it can stay in the markup. --}}
+            <img src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}"
+                 style="view-transition-name: article-hero" class="w-full mb-10 border border-line">
         @endif
         @if ($article->tr('excerpt'))
             <p class="text-[19px] leading-[1.6] text-ink-soft font-medium mb-8">{{ $article->tr('excerpt') }}</p>

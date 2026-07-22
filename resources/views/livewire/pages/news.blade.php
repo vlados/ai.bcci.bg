@@ -1,6 +1,6 @@
 @php $loc = app()->getLocale(); @endphp
 <div>
-    <div class="bg-paper border-b border-line">
+    <div data-vt="hero" class="bg-paper border-b border-line">
         <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
             <div class="text-[13.5px] font-bold tracking-[2.2px] text-brand mb-4">{{ $page->get('hero_eyebrow') }}</div>
             <h1 class="text-[30px] sm:text-4xl lg:text-[42px] font-bold tracking-[-0.5px] mb-[18px] leading-tight">{{ $page->get('hero_title') }}</h1>
@@ -10,10 +10,10 @@
 
     <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid gap-[26px]">
         @forelse ($articles as $article)
-            <article class="reveal group lift border border-line grid lg:grid-cols-[320px_1fr]">
+            <article data-morph-card class="reveal group lift border border-line grid lg:grid-cols-[320px_1fr]">
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block min-h-[220px] bg-[#E8E7E2] relative overflow-hidden">
                     @if ($article->imageUrl())
-                        <img src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}" loading="lazy" class="photo absolute inset-0 w-full h-full object-cover">
+                        <img data-morph src="{{ $article->imageUrl() }}" alt="{{ $article->tr('title') }}" loading="lazy" class="photo absolute inset-0 w-full h-full object-cover">
                     @else
                         <span class="absolute inset-0 flex items-center justify-center text-[13px] text-[#9C9D9F]">{{ __('Изображение') }}</span>
                     @endif

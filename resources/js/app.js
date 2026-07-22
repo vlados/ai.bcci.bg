@@ -99,8 +99,148 @@ function placeNavBall(animate) {
     navBallX = toX;
 }
 
+// ---------------------------------------------------------------------------
+// View transitions across wire:navigate.
+//
+// wire:navigate is same-document — Livewire fetches the page and morphs the
+// body — so the CSS `@view-transition` rule never fires for internal links; it
+// only covers real document navigations. Bridging the two takes some care:
+//
+// `livewire:navigating` is NOT the hook. Alpine dispatches it and then swaps
+// the DOM synchronously in the same task, while startViewTransition() captures
+// the outgoing snapshot at the *next* rendering opportunity — by which point
+// it would be photographing the new page. The result is a transition from the
+// new page to itself.
+//
+// `livewire:navigate` is preventable (Livewire forwards preventDefault back to
+// Alpine), so we cancel the navigation and re-issue it from inside the
+// transition callback, where the outgoing snapshot is already safely taken.
+// Livewire prefetches on mousedown, so the HTML is usually in flight before
+// the click completes and the callback resolves quickly.
+
+const prefersReducedMotion = () =>
+    window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let activeTransition = null; // set while a navigation transition is running
+let reNavigating = false; // guards our own Alpine.navigate() re-dispatch
+let morphSource = null; // the card image that should carry across, if any
+
+// Note which card was clicked, so exactly one image claims the shared
+// transition name. Capture phase: this has to land before Livewire's handler.
+document.addEventListener(
+    'click',
+    (e) => {
+        const link = e.target.closest && e.target.closest('a[href]');
+        morphSource = link ? link.closest('[data-morph-card]')?.querySelector('[data-morph]') : null;
+    },
+    true
+);
+
+/**
+ * Guarantee exactly one element claims the shared name.
+ *
+ * A stale name is not a cosmetic problem: two elements answering to
+ * `article-hero` makes the browser abort the whole transition. Names can go
+ * stale when a navigation is abandoned mid-flight, and Livewire caches the
+ * outgoing HTML for the back button — inline style and all — so a name left
+ * behind can come back to life on a later visit.
+ */
+function releaseMorphNames() {
+    document.querySelectorAll('[data-morph]').forEach((el) => {
+        el.style.viewTransitionName = '';
+    });
+}
+
+document.addEventListener('livewire:navigate', (e) => {
+    if (reNavigating || !document.startViewTransition || prefersReducedMotion()) {
+        return; // unsupported, or the visitor asked for stillness — navigate normally
+    }
+    if (e.detail?.history) {
+        return; // back/forward: leave Livewire's history restoration alone
+    }
+    if (activeTransition) {
+        // A second navigation while one is still animating (an impatient click,
+        // or a link hit twice). Starting another transition here would abort
+        // both with InvalidStateError — drop the old one and let this one
+        // navigate plainly rather than fighting over the snapshot.
+        activeTransition.skipTransition();
+        return;
+    }
+
+    e.preventDefault();
+
+    // Hold the element in this transition's own closure. Module state can be
+    // reassigned by the next click before this transition finishes, which would
+    // otherwise leave the first element's name behind.
+    const morphEl = morphSource;
+    releaseMorphNames();
+    if (morphEl) {
+        morphEl.style.viewTransitionName = 'article-hero';
+    }
+
+    // A slow response would leave the outgoing page frozen and uninteractive for
+    // as long as the fetch takes, so give the swap a deadline. The timer is
+    // cleared the moment the swap lands — it bounds the *fetch*, not the
+    // animation, which is free to run as long as its CSS says.
+    let bail;
+
+    activeTransition = document.startViewTransition(() =>
+        new Promise((resolve) => {
+            document.addEventListener(
+                'livewire:navigated',
+                () => {
+                    clearTimeout(bail);
+                    resolve();
+                },
+                { once: true }
+            );
+            reNavigating = true;
+            window.Alpine.navigate(String(e.detail.url));
+            reNavigating = false;
+        })
+    );
+
+    bail = setTimeout(() => activeTransition?.skipTransition(), 600);
+
+    activeTransition.finished
+        .catch(() => {}) // rejects when skipped; nothing to do
+        .then(() => {
+            clearTimeout(bail);
+            if (morphEl) {
+                morphEl.style.viewTransitionName = '';
+            }
+            activeTransition = null;
+        });
+});
+
+/**
+ * Reveal anything already on screen without animating it.
+ *
+ * The incoming page's `.reveal` elements start at opacity 0 and wait for the
+ * IntersectionObserver. During a view transition the new snapshot can be taken
+ * before the observer has fired, so the page would cross-fade to blank and then
+ * pop in. Marking what's already in view as visible makes the snapshot honest.
+ */
+function revealWhatIsAlreadyInView() {
+    document.querySelectorAll('.reveal:not(.is-visible), .chart:not(.is-visible)').forEach((el) => {
+        const box = el.getBoundingClientRect();
+        if (box.top < innerHeight && box.bottom > 0) {
+            el.classList.add('is-visible');
+        }
+    });
+}
+
 function boot() {
     setupReveals();
+
+    if (activeTransition) {
+        revealWhatIsAlreadyInView();
+        // Let the page transition land before the ball bounces — two motion
+        // systems on the same header would otherwise talk over each other.
+        activeTransition.finished.catch(() => {}).then(() => placeNavBall(true));
+        return;
+    }
+
     // Wait a frame so layout (and the swapped header) is settled.
     requestAnimationFrame(() => placeNavBall(true));
 }
