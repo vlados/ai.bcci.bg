@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasTranslations;
+use App\Support\FeedBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class NewsArticle extends Model
@@ -23,6 +24,13 @@ class NewsArticle extends Model
         'published_at' => 'date',
         'is_published' => 'boolean',
     ];
+
+    /** Publishing or editing an article invalidates the cached RSS feed. */
+    protected static function booted(): void
+    {
+        static::saved(fn () => FeedBuilder::flush());
+        static::deleted(fn () => FeedBuilder::flush());
+    }
 
     public function scopePublished($query)
     {

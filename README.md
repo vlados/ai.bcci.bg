@@ -70,6 +70,35 @@ Handled by `App\Support\Seo` (rendered in the layout `<head>`) plus
 - `/llms.txt` — machine-readable site map for answer-engines
 - `/feed` and `/en/feed` — RSS for news
 
+### How each one is served
+
+`/sitemap.xml` and `/llms.txt` are **not** routes. `App\Support\SitemapBuilder`
+(spatie/laravel-sitemap) and `App\Support\LlmsTxtBuilder` write them into `public/`,
+so the web server hands over a static file without booting Laravel or touching the
+database. They're the expensive ones — the sitemap covers every page × every locale
+plus all published news, and llms.txt reads a row per content page.
+
+`php artisan seo:generate` writes both; the scheduler runs it nightly at 03:30. That
+means the box needs the Laravel scheduler cronned:
+
+```
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+…and **deploys must run `php artisan seo:generate`**, since both files are gitignored
+and there's no route to fall back on — until the first run those URLs 404. Run it by
+hand after a large content edit rather than waiting for the nightly job.
+
+`/feed` and `/en/feed` stay live routes, cached instead of generated: a feed's value is
+freshness, and the URLs have no extension to serve statically (and are subscribed to,
+so they can't change). `App\Support\FeedBuilder` caches the rendered XML per locale
+forever, and `NewsArticle` / `Page` drop that cache on save — fresher than a nightly
+file, cheaper than rendering per request.
+
+`/robots.txt` remains a route (it's trivial to build). Note there must be **no**
+`public/robots.txt` — a static file there shadows the route and the `Sitemap:`
+directive silently stops being served.
+
 ## Placeholder data to replace
 
 The following are seeded as placeholders and should be updated in the admin

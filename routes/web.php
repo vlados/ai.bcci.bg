@@ -42,7 +42,8 @@ foreach (array_keys(config('site.locales')) as $locale) {
         });
 }
 
-// Machine-readable endpoints (single, cover both locales where relevant).
-Route::get('sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+// robots.txt stays a route because it's cheap and has no static counterpart.
+// sitemap.xml and llms.txt are deliberately absent: they're static files in
+// public/, written by the scheduled `seo:generate` command and served without
+// booting Laravel at all.
 Route::get('robots.txt', [SeoController::class, 'robots'])->name('robots');
-Route::get('llms.txt', [SeoController::class, 'llms'])->name('llms');

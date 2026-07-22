@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\FeedBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
@@ -14,6 +15,12 @@ class Page extends Model
 
     /** @var array<string, self> */
     protected static array $memo = [];
+
+    /** The news page supplies the RSS channel description — editing it invalidates the feed. */
+    protected static function booted(): void
+    {
+        static::saved(fn () => FeedBuilder::flush());
+    }
 
     /**
      * Fetch (and memoize per request) a page record by key. Returns a blank

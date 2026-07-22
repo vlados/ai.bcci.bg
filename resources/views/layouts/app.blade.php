@@ -19,7 +19,7 @@
 
     <link rel="alternate" type="application/rss+xml"
           title="{{ __('Новини') }}" href="{{ route(app()->getLocale().'.feed') }}">
-    <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
+    <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
