@@ -70,6 +70,56 @@ Handled by `App\Support\Seo` (rendered in the layout `<head>`) plus
 - `/llms.txt` — machine-readable site map for answer-engines
 - `/feed` and `/en/feed` — RSS for news
 
+## Going live
+
+Run through this before the first production deploy. Every item here has bitten
+this project at least once.
+
+**1. Point the app at the canonical host.** `APP_URL=https://ai.bcci.bg` — it
+drives every canonical, hreflang, Open Graph and JSON-LD URL and the generated
+sitemap. `SEO_PRODUCTION_HOST=ai.bcci.bg` keeps every *other* host (dev box,
+preview, bare IP) on `noindex`. Both are documented in `.env.example`.
+
+**2. Generate the static SEO files** — `php artisan seo:generate`. `sitemap.xml`
+and `llms.txt` are gitignored and have no route fallback, so until this runs
+those URLs 404 while `robots.txt` advertises the sitemap.
+
+**3. Cron the scheduler**, or nothing ever regenerates:
+
+```
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+**4. Redirect the old URLs.** `ai.bcci.bg` currently serves the survey campaign,
+and this site has no `/ai-business-2026` route — those URLs 404 on cutover
+unless mapped. They carry the campaign's accumulated links, including from
+LinkedIn:
+
+```
+ai.bcci.bg/                          →  the new homepage (remove the existing 302)
+ai.bcci.bg/ai-business-2026          →  301  /survey
+ai.bcci.bg/ai-business-2026/survey   →  301  /survey
+prouchvane.bg/ai-business-2026*      →  301  ai.bcci.bg equivalents
+```
+
+Do **not** blanket-redirect `prouchvane.bg` — its root is a separate survey
+platform, not a mirror. Only the `/ai-business-2026*` paths are duplicates.
+
+**5. Protect the old dev host.** `aicouncil.hosting.vladko.dev` served
+`index, follow` with a self-canonical. Item 1 fixes that in the app, but put it
+behind HTTP auth as well, and 301 it to the production equivalents afterwards.
+
+**6. Decide the AI-crawler policy.** GPTBot and OAI-SearchBot are currently
+allowed by omission. That is a defensible choice given the GEO goals — but it
+should be a decision, not an accident (SEO.md line 1230).
+
+### What is deliberately empty
+
+Team, partners and positions ship empty rather than populated with placeholders.
+Their sections hide themselves until real records exist; add them in the admin
+panel. Positions additionally require an attached document — see
+`Position::scopePublished()`.
+
 ### How each one is served
 
 `/sitemap.xml` and `/llms.txt` are **not** routes. `App\Support\SitemapBuilder`
