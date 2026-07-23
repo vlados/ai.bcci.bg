@@ -4,6 +4,27 @@
 // when the visitor hasn't requested reduced motion). If IntersectionObserver
 // is unavailable, everything is revealed immediately so content is never stuck.
 
+/**
+ * Put `motion-on` back on <html>.
+ *
+ * The class is set by an inline script in the <head> so it lands before first
+ * paint. wire:navigate then syncs <html>'s attributes from the incoming
+ * document, which wipes it — and because every motion rule is gated on it, the
+ * whole motion system (reveals, chart bars, ticker, dot pulse, hover lift)
+ * silently stopped working after the first navigation.
+ *
+ * The class is deliberately JS-set rather than a bare media query: without JS
+ * nothing can add `is-visible`, so content must stay visible instead of being
+ * hidden by a reveal that will never fire.
+ */
+function armMotion() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    document.documentElement.classList.add('motion-on');
+}
+
 function setupReveals() {
     if (!document.documentElement.classList.contains('motion-on')) {
         return;
@@ -230,7 +251,15 @@ function revealWhatIsAlreadyInView() {
     });
 }
 
+// Re-arm before the new HTML is painted. `onSwap` runs after the swap but
+// before scripts load, which is exactly the window for restoring critical
+// styling without a flash of un-animated content.
+document.addEventListener('livewire:navigating', (e) => {
+    e.detail?.onSwap?.(armMotion);
+});
+
 function boot() {
+    armMotion(); // belt and braces, in case onSwap was unavailable
     setupReveals();
 
     if (activeTransition) {
