@@ -24,9 +24,18 @@ class Position extends Model
         'national' => ['bg' => 'НАЦИОНАЛНО', 'en' => 'NATIONAL'],
     ];
 
+    /**
+     * Only positions we can actually show the reader.
+     *
+     * A listed position title with no retrievable document is an unverifiable
+     * claim: it tells the world the Council took a stance while giving nobody
+     * a way to read it. Attach the PDF in the admin panel and the position
+     * appears automatically.
+     */
     public function scopePublished($query)
     {
-        return $query->where('is_published', true);
+        return $query->where('is_published', true)
+            ->whereNotNull('pdf_path');
     }
 
     public function badgeLabel(?string $locale = null): string

@@ -6,7 +6,6 @@ use App\Models\NewsArticle;
 use App\Models\Page;
 use App\Models\Partner;
 use App\Models\Position;
-use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -183,33 +182,26 @@ class SiteSeeder extends Seeder
         }
     }
 
+    /**
+     * Team and partners are deliberately NOT seeded.
+     *
+     * They used to be filled with "Име Фамилия" x6 and "Партньор 1..8", which
+     * is exactly what the SEO audit flags as a launch blocker: placeholder
+     * people and partner relationships make an institution look unreal and
+     * cannot be verified by anyone. The About and Partners pages already hide
+     * their sections when these tables are empty, so an empty site is honest
+     * where a populated fake one is not.
+     *
+     * Real members and partners are entered through the admin panel.
+     */
     protected function seedTeam(): void
     {
-        $roles = [
-            $this->t('Председател', 'Chair'),
-            $this->t('Заместник-председател', 'Deputy Chair'),
-            $this->t('Член — технологичен сектор', 'Member — technology sector'),
-            $this->t('Член — право', 'Member — law'),
-            $this->t('Член — наука', 'Member — science'),
-            $this->t('Член — образование', 'Member — education'),
-        ];
-
-        foreach ($roles as $i => $role) {
-            TeamMember::updateOrCreate(
-                ['name' => 'Име Фамилия', 'sort_order' => $i + 1],
-                ['role' => $role, 'sort_order' => $i + 1],
-            );
-        }
+        // Intentionally empty — see the note above.
     }
 
     protected function seedPartners(): void
     {
-        for ($i = 1; $i <= 8; $i++) {
-            Partner::updateOrCreate(
-                ['name' => 'Партньор '.$i],
-                ['sort_order' => $i],
-            );
-        }
+        // Intentionally empty — see the note above.
     }
 
     protected function seedPositions(): void
