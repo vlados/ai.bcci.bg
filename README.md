@@ -90,20 +90,28 @@ those URLs 404 while `robots.txt` advertises the sitemap.
 * * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-**4. Redirect the old URLs.** `ai.bcci.bg` currently serves the survey campaign,
-and this site has no `/ai-business-2026` route — those URLs 404 on cutover
-unless mapped. They carry the campaign's accumulated links, including from
-LinkedIn:
+**4. Redirect the old URLs.** The `ai.bcci.bg` side is **already handled in the
+app** — `routes/web.php` 301s `/ai-business-2026` and anything beneath it to
+`/survey` in a single hop, preserving query strings so campaign tracking
+survives. Covered by `SeoTest::test_legacy_campaign_urls_redirect_in_one_hop`.
+
+Two things still need doing at the server:
 
 ```
-ai.bcci.bg/                          →  the new homepage (remove the existing 302)
-ai.bcci.bg/ai-business-2026          →  301  /survey
-ai.bcci.bg/ai-business-2026/survey   →  301  /survey
-prouchvane.bg/ai-business-2026*      →  301  ai.bcci.bg equivalents
+ai.bcci.bg/   →  remove the existing 302 to /ai-business-2026,
+                 so the root serves the new homepage
+prouchvane.bg →  leave alone for now (see the warning below)
 ```
 
-Do **not** blanket-redirect `prouchvane.bg` — its root is a separate survey
-platform, not a mirror. Only the `/ai-business-2026*` paths are duplicates.
+⚠️ **Do not redirect `prouchvane.bg/ai-business-2026` to `ai.bcci.bg`.** That is
+where the live questionnaire runs, and the survey page's CTA points at it. Add
+that redirect and you close a loop — `/survey` → `prouchvane.bg` →
+`ai.bcci.bg/ai-business-2026` → `/survey` — which traps every visitor trying to
+take the survey. Consolidate that domain only after the questionnaire itself has
+moved onto this site, and change the CTA in the same deploy.
+
+Its root is a separate survey platform, not a mirror, so it must never be
+blanket-redirected regardless.
 
 **5. Protect the old dev host.** `aicouncil.hosting.vladko.dev` served
 `index, follow` with a self-canonical. Item 1 fixes that in the app, but put it

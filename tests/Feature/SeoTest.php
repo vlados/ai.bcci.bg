@@ -95,6 +95,26 @@ class SeoTest extends TestCase
         $this->assertStringNotContainsString('BreadcrumbList', $home);
     }
 
+    /**
+     * The campaign URLs ai.bcci.bg served before this site replaced it. They
+     * carry real external links, so they must resolve in one permanent hop
+     * and keep their tracking parameters.
+     */
+    public function test_legacy_campaign_urls_redirect_in_one_hop(): void
+    {
+        foreach (['/ai-business-2026', '/ai-business-2026/survey', '/ai-business-2026/deeper/path'] as $old) {
+            $this->get($old)->assertRedirect(url('/survey'))->assertStatus(301);
+        }
+
+        // Campaign attribution must survive the redirect.
+        $this->get('/ai-business-2026?utm_source=linkedin&utm_campaign=ai2026')
+            ->assertStatus(301)
+            ->assertRedirect(url('/survey').'?utm_source=linkedin&utm_campaign=ai2026');
+
+        // And the destination must be a real page, not another redirect.
+        $this->get('/survey')->assertOk();
+    }
+
     /** The LCP image must never be lazy-loaded (SEO.md:1048). */
     public function test_above_the_fold_imagery_is_eager(): void
     {

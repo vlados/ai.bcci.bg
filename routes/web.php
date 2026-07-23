@@ -42,6 +42,30 @@ foreach (array_keys(config('site.locales')) as $locale) {
         });
 }
 
+/*
+| Legacy campaign URLs.
+|
+| ai.bcci.bg used to serve the "AI in Bulgarian Business 2026" campaign at
+| /ai-business-2026 (and /ai-business-2026/survey). This site replaces that
+| host and has no such route, so without these the URLs 404 on cutover —
+| and they carry the campaign's accumulated links, including from LinkedIn.
+|
+| One hop, permanent, query string preserved so campaign tracking survives.
+| The wildcard catches any deeper campaign path in a single redirect rather
+| than letting it fall through to a 404.
+|
+| CAUTION: the survey page's CTA points at prouchvane.bg/ai-business-2026,
+| which is where the live questionnaire is. Do NOT also redirect
+| prouchvane.bg/ai-business-2026 back here — that closes the loop
+| /survey → prouchvane.bg → ai.bcci.bg → /survey and traps the visitor.
+| Consolidate that domain only after the questionnaire itself has moved.
+*/
+Route::get('ai-business-2026/{path?}', fn () => redirect()->route(
+    $default.'.survey',
+    request()->query(),
+    301,
+))->where('path', '.*')->name('legacy.campaign');
+
 // robots.txt stays a route because it's cheap and has no static counterpart.
 // sitemap.xml and llms.txt are deliberately absent: they're static files in
 // public/, written by the scheduled `seo:generate` command and served without
