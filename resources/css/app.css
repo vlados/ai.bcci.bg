@@ -41,6 +41,13 @@
     /* EU institutional blue (Pantone Reflex Blue), for the EU-27 data series. */
     --color-eu: #003399;
 
+    /* One step below text-xs. The chart's paired value labels sit two to a
+       column and collide at 12px on narrow screens; the default scale stops at
+       12px, so the step is declared here rather than written inline as
+       text-[10px]. */
+    --text-2xs: 0.625rem;
+    --text-2xs--line-height: 1.4;
+
     /* Sofia Sans was drawn for the city of Sofia and carries the Bulgarian
        localised Cyrillic forms; <html lang="bg"> switches them on via `locl`. */
     --font-sans: 'Sofia Sans', ui-sans-serif, system-ui, sans-serif;

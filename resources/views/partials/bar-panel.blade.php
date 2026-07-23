@@ -18,7 +18,7 @@
     <h3 class="text-sm font-bold tracking-widest uppercase font-display mb-3">{{ $title }}</h3>
 
     <div aria-hidden="true" class="flex gap-2">
-        <div class="relative w-8 shrink-0 h-45 lg:h-52 text-xs text-faint">
+        <div class="relative w-8 shrink-0 h-45 lg:h-52 text-2xs text-faint">
             @foreach ($ticks as $tick)
                 <span class="absolute right-0 -translate-y-1/2 tabular-nums" style="top: {{ 100 - $tick }}%">{{ $tick }}</span>
             @endforeach
@@ -50,7 +50,9 @@
             <div class="flex gap-2 sm:gap-4 px-1 mt-1.5">
                 @foreach ($series as $year => $v)
                     <div class="flex-1 min-w-0">
-                        <div class="flex text-xs lg:text-xs font-semibold tabular-nums">
+                        {{-- Two values share the width of one year column, so
+                             these stay a step below text-xs until there is room. --}}
+                        <div class="flex text-2xs lg:text-xs font-semibold tabular-nums">
                             <span class="w-1/2 text-center text-brand-dark">{{ $num($v['bg']) }}</span>
                             <span class="w-1/2 text-center text-eu">{{ $num($v['eu']) }}</span>
                         </div>
