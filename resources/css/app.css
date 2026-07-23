@@ -231,3 +231,187 @@ h1, h2 { letter-spacing: -0.015em; }
    instead, which is what it is there for. */
 .rich tbody td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
+/*
+| ============================================================================
+| Long-form article reading experience.
+|
+| A data-journal reading page. The one move that carries it is already in the
+| design tokens: --font-serif (PT Serif) was declared and loaded but never
+| deployed — a long read is exactly where it belongs. The Condensed display
+| face and the red rule stay as furniture; the delight here is typographic,
+| not animated, which is why the page is deliberately still.
+|
+| Everything is scoped to .longform so the static-page .rich bodies above keep
+| their plain sans defaults untouched.
+|
+| Two measures: text is held to a comfortable ~40rem line; figures and data
+| tables break out to the full ~52rem shell so a comparison table can breathe.
+| ============================================================================
+*/
+/* Three measures, decoupled on purpose:
+   - --lf-measure (40rem) holds the prose to ~66 characters, the readability
+     optimum; widening body text past this makes the read worse, not better.
+   - --lf-wide (48rem) is the masthead/shell, matching the site's article width.
+   - --lf-break (56rem) is where the cover and data tables break out, because a
+     five-column comparison genuinely needs the room the prose must not have. */
+.longform { --lf-measure: 40rem; --lf-wide: 48rem; --lf-break: 56rem; }
+
+.lf-shell { max-width: var(--lf-wide); margin-inline: auto; padding-inline: 1.25rem; }
+@media (min-width: 640px) { .lf-shell { padding-inline: 2rem; } }
+
+/* Reading progress. Pure CSS scroll timeline — a red hairline along the very
+   top of the viewport that echoes the red top-bar on the social cards. It sits
+   above the sticky header (z-index) and simply stays at zero width where the
+   scroll timeline is unsupported, so there is never a stuck or broken bar. */
+.reading-rail { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 60; pointer-events: none; }
+.reading-rail__fill { display: block; height: 100%; width: 100%; background: var(--color-brand);
+    transform: scaleX(0); transform-origin: 0 50%; }
+@supports (animation-timeline: scroll()) {
+    .reading-rail__fill { animation: lf-progress linear both; animation-timeline: scroll(root block); }
+}
+@keyframes lf-progress { to { transform: scaleX(1); } }
+
+/* — Masthead — */
+.lf-back { font-family: var(--font-display); font-weight: 700; font-size: 0.8125rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brand);
+    display: inline-flex; align-items: center; gap: 0.5rem; }
+.lf-back:hover { color: var(--color-brand-dark); }
+
+.lf-kicker { display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 1.9rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 0.8125rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-ink-soft); }
+
+.lf-title { margin-top: 1rem; font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(2.1rem, 5.4vw, 3.35rem); line-height: 1.04; letter-spacing: -0.02em;
+    color: var(--color-ink); text-wrap: balance; }
+
+.lf-standfirst { margin-top: 1.35rem; max-width: 38rem; font-family: var(--font-sans);
+    font-weight: 500; font-size: clamp(1.15rem, 2.4vw, 1.4rem); line-height: 1.5;
+    color: var(--color-ink-soft); text-wrap: pretty; }
+
+.lf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem; margin-top: 1.6rem;
+    font-family: var(--font-sans); font-size: 0.8125rem; letter-spacing: 0.02em;
+    color: var(--color-faint); font-variant-numeric: tabular-nums; }
+.lf-meta__sep { width: 3px; height: 3px; border-radius: 50%; background: var(--color-faint); }
+
+.lf-rule { width: 4.5rem; height: 5px; background: var(--color-brand); margin-top: 1.9rem; }
+
+/* — Hero figure: breaks out past the masthead to the full break width. Centred
+     in the viewport with margin auto, so it lines up with the (also centred)
+     masthead and extends symmetrically past it. — */
+.lf-figure { width: min(var(--lf-break), calc(100vw - 2.5rem)); margin: 2.75rem auto 0; }
+.lf-figure img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover;
+    border: 1px solid var(--color-line); }
+
+/* — Body: serif, held to a reading measure inside the wider shell — */
+.longform .lf-body { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.8;
+    color: #2b2c30; }
+.longform .lf-body > * { max-width: var(--lf-measure); margin-inline: auto; }
+/* Data tables break out past the reading measure to the full break width. The
+   left/translateX pair centres the wider element on the reading column without
+   a restructure of the raw body HTML — the table lives inside the body div, so
+   a grid breakout is not available to it. min() clamps it to the viewport so it
+   never forces a horizontal scroll on the page (it scrolls inside itself). */
+.longform .lf-body > .table-wrap { position: relative; left: 50%; transform: translateX(-50%);
+    width: min(var(--lf-break), calc(100vw - 2.5rem)); max-width: none; }
+
+.longform .lf-body p { margin-block: 1.35rem; }
+
+/* Drop cap in the Condensed brand face — an echo of the logo wordmark, and a
+   deliberate contrast against the serif it opens. ::first-letter reaches the
+   first glyph even when the lead sentence is wrapped in <strong>. */
+.longform .lf-body > p:first-of-type::first-letter {
+    float: left; font-family: var(--font-display); font-weight: 700; color: var(--color-brand);
+    font-size: 3.9em; line-height: 0.7; margin: 0.05em 0.12em 0 0; }
+
+.longform .lf-body h2 { margin-top: 2.9rem; margin-bottom: 0.4rem; font-family: var(--font-display);
+    font-weight: 700; font-size: clamp(1.5rem, 3vw, 1.9rem); line-height: 1.15;
+    letter-spacing: -0.01em; color: var(--color-ink); }
+.longform .lf-body h2::before { content: ''; display: block; width: 2.25rem; height: 4px;
+    background: var(--color-brand); margin-bottom: 1.05rem; }
+
+.longform .lf-body h3 { margin-top: 2.1rem; margin-bottom: 0.3rem; font-family: var(--font-display);
+    font-weight: 700; font-size: clamp(1.2rem, 2.2vw, 1.35rem); line-height: 1.25;
+    color: var(--color-ink-soft); }
+
+/* Refined citation links — the bodies are dense with Eurostat references, so
+   the underline is a soft tint that resolves to full brand on hover. */
+.longform .lf-body a { color: var(--color-brand); text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-brand) 32%, transparent);
+    text-decoration-thickness: 1.5px; text-underline-offset: 2.5px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease; }
+.longform .lf-body a:hover { color: var(--color-brand-dark);
+    text-decoration-color: var(--color-brand-dark); }
+
+/* Emphasis shifts typeface, not just weight: strong steps into the sans (reads
+   as a deliberate call-out inside the serif), em uses the real PT Serif italic. */
+.longform .lf-body strong { font-family: var(--font-sans); font-weight: 600; color: var(--color-ink); }
+.longform .lf-body em { font-style: italic; color: var(--color-body); }
+
+.longform .lf-body ul, .longform .lf-body ol { padding-inline-start: 1.5rem; margin-block: 1.35rem; }
+.longform .lf-body li { margin-block: 0.45rem; padding-inline-start: 0.25rem; }
+.longform .lf-body ul { list-style: disc; }
+.longform .lf-body ol { list-style: decimal; }
+.longform .lf-body li::marker { color: var(--color-brand); font-weight: 700; }
+
+/* — Data table, elevated from a bordered grid to a data-journal figure:
+     display-face head, a single ink rule under it, hairline rows, hover tint,
+     and the brand/EU colour-coding from the site's own chart legend. — */
+.longform .lf-body .table-wrap { overflow-x: auto; margin-block: 2.25rem; }
+.longform .lf-body table { width: 100%; min-width: 34rem; border-collapse: collapse;
+    font-family: var(--font-sans); font-size: 0.9375rem; }
+.longform .lf-body caption { text-align: left; margin-bottom: 0.75rem; font-family: var(--font-display);
+    font-weight: 700; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-faint); }
+.longform .lf-body thead th { font-family: var(--font-display); font-weight: 700;
+    background: transparent; border-bottom: 2px solid var(--color-ink);
+    padding: 0.5rem 0.8rem; text-align: right; white-space: nowrap; }
+.longform .lf-body thead th:first-child { text-align: left; }
+.longform .lf-body tbody th { text-align: left; font-weight: 600; color: var(--color-ink); }
+.longform .lf-body tbody td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.longform .lf-body tbody th, .longform .lf-body tbody td {
+    padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--color-line); vertical-align: top; }
+.longform .lf-body tbody tr:hover th, .longform .lf-body tbody tr:hover td { background: var(--color-paper); }
+/* Column colour-coding matches the home-page chart legend: Bulgaria red, EU
+   blue. The comparison table's columns are Показател | България | ЕС | … */
+.longform .lf-body tbody td:nth-child(2) { color: var(--color-brand-dark); font-weight: 600; }
+.longform .lf-body tbody td:nth-child(3) { color: var(--color-eu); font-weight: 600; }
+
+/* — End mark and byline — */
+.lf-endmark { max-width: var(--lf-measure); margin: 2.75rem auto 0; text-align: center; }
+.lf-endmark::before { content: ''; display: inline-block; width: 0.6rem; height: 0.6rem;
+    background: var(--color-brand); }
+
+.lf-byline { max-width: var(--lf-measure); margin: 1.75rem auto 0; padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line); display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
+    justify-content: space-between; align-items: center; }
+.lf-byline__label { font-family: var(--font-display); font-weight: 700; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-faint); }
+.lf-byline__name { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem;
+    color: var(--color-ink); margin-top: 0.15rem; }
+.lf-share { display: inline-flex; align-items: center; gap: 0.55rem; }
+.lf-share__label { font-family: var(--font-display); font-weight: 700; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-faint); margin-right: 0.2rem; }
+.lf-share a { display: inline-flex; align-items: center; justify-content: center; width: 2rem;
+    height: 2rem; border: 1px solid var(--color-line); border-radius: 50%; color: var(--color-ink-soft);
+    font-family: var(--font-display); font-weight: 700; font-size: 0.8125rem;
+    transition: color 0.2s ease, border-color 0.2s ease; }
+.lf-share a:hover { color: var(--color-brand); border-color: var(--color-brand); }
+
+/* Entrance: a quiet fade-only stagger. No transform, deliberately — this
+   masthead is a view-transition group (data-vt="hero") that morphs between
+   pages, and a translate would fight that morph. A fade cannot. */
+.motion-on .lf-enter { opacity: 0; animation: lf-fade 0.6s ease both; }
+.motion-on .lf-enter-1 { animation-delay: 0.04s; }
+.motion-on .lf-enter-2 { animation-delay: 0.10s; }
+.motion-on .lf-enter-3 { animation-delay: 0.16s; }
+.motion-on .lf-enter-4 { animation-delay: 0.24s; }
+.motion-on .lf-enter-5 { animation-delay: 0.32s; }
+.motion-on .lf-enter-6 { animation-delay: 0.40s; }
+@keyframes lf-fade { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .motion-on .lf-enter { animation: none; opacity: 1; }
+    .reading-rail__fill { animation: none; }
+}
+
