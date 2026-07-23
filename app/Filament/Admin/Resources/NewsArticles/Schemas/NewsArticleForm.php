@@ -27,8 +27,11 @@ class NewsArticleForm
                     ->helperText('Използва се в адреса: /news/{slug}'),
                 DatePicker::make('published_at')->label('Дата на публикуване')->required()->default(now()),
                 FileUpload::make('image')->label('Изображение (качване)')->image()->imageEditor()->directory('news')->columnSpanFull(),
-                TextInput::make('image_url')->label('или URL на изображение')->url()->columnSpanFull()
-                    ->helperText('Използва се, ако не е качено изображение.'),
+                // Not ->url(): the generated covers are stored as site-relative
+                // paths (/assets/news/…), which that rule rejects.
+                TextInput::make('image_url')->label('или URL на изображение')->columnSpanFull()
+                    ->rule('regex:#^(https?://|/)#')
+                    ->helperText('Използва се, ако не е качено изображение. Пълен адрес (https://…) или път в сайта (/assets/…).'),
                 Toggle::make('is_published')->label('Публикувана')->default(true),
             ])->columns(2),
 

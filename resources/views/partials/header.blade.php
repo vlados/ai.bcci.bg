@@ -6,7 +6,7 @@
         @keydown.escape.window="close()"
         @click.outside="open = false"
         class="border-b border-line bg-white sticky top-0 z-50">
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-3.5 flex justify-between items-center gap-x-6 gap-y-3">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3.5 flex justify-between items-center gap-x-6 gap-y-3">
         <a href="{{ route(app()->getLocale().'.home') }}" wire:navigate class="shrink-0">
             {{-- Intrinsic size of the asset (1800x234); CSS still sizes it. Present
                  purely so the browser can reserve the box and avoid layout shift. --}}

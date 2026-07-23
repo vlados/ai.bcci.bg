@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:800px}
+  body{font-family:'Sofia Sans',sans-serif;color:#121316;display:flex;overflow:hidden;background:#fff}
+
+  .top{position:absolute;top:0;left:0;right:0;height:10px;background:#ee272f;z-index:3}
+  .main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 56px 0 78px}
+  .band{width:300px;background:#f6f5f2;border-left:1px solid #e6e4df;position:relative;overflow:hidden}
+  /* Footer wordmark, bled off two edges the way the site does it. */
+  .ghost{position:absolute;right:-34px;bottom:-104px;line-height:1;
+         font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;font-size:306px;
+         color:rgba(18,19,22,.075);letter-spacing:-.03em}
+
+  /* Source plate. The dataset code is the caption: it states precisely which
+     Eurostat series the figures come from without committing to a language.
+     Deliberately not `text-transform: uppercase` — that would render the code
+     as ISOC_EB_AI, which is not what the dataset is called. */
+  .plate{font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;font-size:25px;
+         letter-spacing:.055em;color:#6a6b70}
+  .rule{width:72px;height:5px;background:#ee272f;margin:26px 0 0}
+
+  /* One shared grid for the legend and every figure row, so the two series stay
+     in the same two columns however many rows a cover carries. Bulgaria is set
+     flush against the divider and the EU away from it: the whitespace between
+     the two numbers is the gap the articles are about. */
+  .grid{display:grid;grid-template-columns:1fr 1fr;column-gap:0}
+  .col-bg{text-align:right;padding-right:34px}
+  .col-eu{text-align:left;padding-left:30px}
+
+  .legend{margin-top:40px;font-size:23px;font-weight:600;color:#37383c}
+  .legend span{display:inline-flex;align-items:center;gap:11px}
+  .swatch{width:15px;height:15px;display:block}
+  .swatch-bg{background:#ee272f}
+  .swatch-eu{background:#003399}
+
+  .rows{margin-top:14px;position:relative}
+  /* The hairline the figures face across. */
+  .rows::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:#e6e4df}
+  .row{align-items:baseline;font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;
+       font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.06}
+  .row + .row{margin-top:var(--row-gap,18px)}
+  .bg{color:#ee272f}
+  .eu{color:#003399}
+
+  /* A single figure gets the whole frame; a stack of them is set smaller so
+     four rows still clear the footer. */
+  body.rows-1 .row{font-size:132px}
+  body.rows-2 .row{font-size:104px;--row-gap:22px}
+  body.rows-3 .row{font-size:82px;--row-gap:20px}
+  body.rows-4 .row{font-size:66px;--row-gap:16px}
+
+  .foot{display:flex;align-items:center;gap:12px;margin-top:44px;font-size:21px;font-weight:600;color:#6a6b70}
+  .dot{width:10px;height:10px;border-radius:99px;background:#ee272f;display:block}
+</style></head>
+<body class="rows-{{COUNT}}">
+  <div class="top"></div>
+  <div class="main">
+    <div class="plate">{{PLATE}}</div>
+    <div class="rule"></div>
+
+    <div class="legend grid">
+      <span class="col-bg" style="justify-content:flex-end"><span class="swatch swatch-bg"></span>BG</span>
+      <span class="col-eu"><span class="swatch swatch-eu"></span>EU-27</span>
+    </div>
+
+    <div class="rows">{{ROWS}}</div>
+
+    <div class="foot"><span class="dot"></span><span>ai.bcci.bg</span></div>
+  </div>
+  <div class="band"><div class="ghost">ai</div></div>
+</body></html>

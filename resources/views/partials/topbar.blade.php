@@ -1,5 +1,5 @@
-<div data-vt="topbar" class="bg-ink text-[#B9BABE] text-[13.5px]">
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-[9px] flex justify-between items-center gap-4">
+<div data-vt="topbar" class="bg-ink text-on-ink-bright text-sm">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-2 flex justify-between items-center gap-4">
         <span>{{ $global->get('topbar_tagline') }}</span>
         {{-- lang/hreflang on each option so assistive tech announces "EN" in
              English rather than reading it with Bulgarian pronunciation, and
@@ -14,7 +14,7 @@
                        class="hover:text-white">{{ $alt['label'] }}</a>
                 @endif
                 @unless ($loop->last)
-                    <span aria-hidden="true" class="text-[#55565A]">|</span>
+                    <span aria-hidden="true" class="text-hush">|</span>
                 @endunless
             @endforeach
         </nav>

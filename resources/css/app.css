@@ -6,9 +6,10 @@
 @source '../../storage/framework/views/*.php';
 
 /*
-| Design tokens ported verbatim from the approved AI Council design
-| (Съвет за изкуствен интелект — БТПП). Tailwind v4 turns each --color-*
-| into utilities: text-brand, bg-paper, border-line, etc.
+| Design tokens from the approved AI Council design
+| (Съвет за изкуствен интелект — БТПП). Colours are verbatim; the typefaces
+| have since moved to Sofia Sans (see the note below). Tailwind v4 turns each
+| --color-* into utilities: text-brand, bg-paper, border-line, etc.
 */
 @theme {
     --color-brand: #ee272f;
@@ -25,12 +26,26 @@
     --color-paper: #f6f5f2;
     --color-footer-field: #1d1e22;
 
+    /* Tones that used to be written inline as arbitrary hex values. Declaring
+       them here is what turns them into ordinary utilities — bg-wash,
+       text-hush, border-ink-line — instead of bg-[#E8E7E2] and friends. */
+    --color-wash: #e8e7e2;         /* empty image wells */
+    --color-hush: #55565a;         /* secondary text inside cards */
+    --color-paper-soft: #fbfaf8;   /* row hover, partner tiles */
+    --color-line-strong: #c9c8c3;  /* chip outlines, one step up from --color-line */
+    --color-brand-wash: #fdf3f3;   /* status banners */
+    --color-on-ink: #a9aaae;       /* body text on the ink background */
+    --color-on-ink-bright: #b9babe;
+    --color-ink-line: #2a2b2f;     /* rules drawn on the ink background */
+
     /* EU institutional blue (Pantone Reflex Blue), for the EU-27 data series. */
     --color-eu: #003399;
 
-    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    /* Sofia Sans was drawn for the city of Sofia and carries the Bulgarian
+       localised Cyrillic forms; <html lang="bg"> switches them on via `locl`. */
+    --font-sans: 'Sofia Sans', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'PT Serif', Georgia, serif;
-    --font-display: 'Roboto Condensed', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Sofia Sans Condensed', 'Sofia Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Condensed display type for every heading — an echo of the logo wordmark. */
@@ -195,4 +210,17 @@ h1, h2 { letter-spacing: -0.015em; }
 .rich ol { list-style: decimal; padding-inline-start: 1.4rem; margin-block: 0.75rem; }
 .rich h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; }
 .rich h3 { font-size: 1.2rem; font-weight: 700; margin-top: 1.25rem; }
+
+/* Data tables in article bodies. A table cannot be laid out narrower than its
+   min-content width, so it has to scroll inside a wrapper — left to itself it
+   silently widens the whole page (see the sr-only table fix in bar-panel). */
+.rich .table-wrap { overflow-x: auto; margin-block: 1.5rem; }
+.rich table { width: 100%; min-width: 34rem; border-collapse: collapse; font-size: 0.9375rem; }
+.rich caption { text-align: left; color: var(--color-faint); font-size: 0.8125rem; margin-bottom: 0.5rem; }
+.rich th, .rich td { border: 1px solid var(--color-line); padding: 0.5rem 0.7rem; vertical-align: top; }
+.rich thead th { background: var(--color-paper); font-family: var(--font-display); }
+.rich tbody th { text-align: left; font-weight: 600; }
+/* nowrap keeps a value like "0,77% от БВП" on one line; the wrapper scrolls
+   instead, which is what it is there for. */
+.rich tbody td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 

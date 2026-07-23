@@ -18,14 +18,14 @@
 @endphp
 
 <x-layouts::app>
-    <div class="max-w-[820px] mx-auto px-5 sm:px-8 py-16 lg:py-24">
-        <div class="text-[13.5px] font-bold tracking-[2.2px] text-brand mb-4">404</div>
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 py-16 lg:py-24">
+        <div class="text-sm font-bold tracking-widest text-brand mb-4">404</div>
 
-        <h1 class="text-[30px] sm:text-4xl lg:text-[42px] font-bold tracking-[-0.5px] mb-[18px] leading-tight">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4 leading-tight">
             {{ $t('Страницата не е намерена', 'Page not found') }}
         </h1>
 
-        <p class="text-lg leading-[1.65] text-body mb-9">
+        <p class="text-lg leading-relaxed text-body mb-9">
             {{ $t(
                 'Възможно е адресът да е сгрешен или страницата да е преместена. Оттук можете да продължите към основните раздели на сайта.',
                 'The address may be mistyped, or the page may have moved. You can continue to the main sections of the site from here.'
@@ -46,7 +46,7 @@
             </ul>
         </nav>
 
-        <p class="mt-9 text-[15px]">
+        <p class="mt-9 text-base">
             <a href="{{ route($loc.'.home') }}" wire:navigate class="font-semibold text-brand">
                 ← {{ $t('Към началната страница', 'Back to the homepage') }}
             </a>

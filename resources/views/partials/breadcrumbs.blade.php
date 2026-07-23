@@ -7,7 +7,7 @@
 
 @if (count($trail) > 1)
     <nav aria-label="{{ __('Навигация') }}" class="border-b border-line bg-white">
-        <ol class="max-w-[1216px] mx-auto px-5 sm:px-8 py-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
+        <ol class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
             @foreach ($trail as $crumb)
                 <li class="flex items-center gap-2 min-w-0">
                     @if (! $loop->last && ! empty($crumb['url']))

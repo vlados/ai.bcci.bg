@@ -54,6 +54,15 @@ class NewsArticle extends Model
             return asset('storage/'.$this->image);
         }
 
-        return $this->image_url ?: null;
+        if (! $this->image_url) {
+            return null;
+        }
+
+        // A site-relative path — how the committed covers under public/assets
+        // are stored — is resolved against the app URL, so the same seeded
+        // value works on any domain. An absolute URL is passed through.
+        return str_starts_with($this->image_url, '/')
+            ? asset($this->image_url)
+            : $this->image_url;
     }
 }

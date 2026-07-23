@@ -11,22 +11,22 @@
 @endphp
 <div>
     {{-- Hero --}}
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 pt-12 pb-12 lg:pt-[84px] lg:pb-[76px] grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-[72px]">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-12 pb-12 lg:pt-21 lg:pb-19 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-18">
         <div>
-            <div class="flex items-center gap-2.5 mb-[22px]">
+            <div class="flex items-center gap-2.5 mb-5">
                 <span class="dot dot-pulse shrink-0"></span>
-                <span class="text-[13.5px] font-bold tracking-[2.2px] text-brand">{{ $page->get('hero_eyebrow') }}</span>
+                <span class="text-sm font-bold tracking-widest text-brand">{{ $page->get('hero_eyebrow') }}</span>
             </div>
-            <h1 class="uppercase text-[38px] sm:text-[56px] lg:text-[70px] leading-[1.02] font-bold text-ink mb-7 tracking-[-0.01em] text-pretty">{{ $titleHead }} @if ($titleTail)<span class="text-brand">{{ $titleTail }}</span>@endif</h1>
-            <p class="text-lg leading-[1.65] text-body mb-9 max-w-[620px]">{{ $page->get('hero_intro') }}</p>
+            <h1 class="uppercase text-4xl sm:text-6xl lg:text-7xl leading-none font-bold text-ink mb-7 tracking-tight text-pretty">{{ $titleHead }} @if ($titleTail)<span class="text-brand">{{ $titleTail }}</span>@endif</h1>
+            <p class="text-lg leading-relaxed text-body mb-9 max-w-xl">{{ $page->get('hero_intro') }}</p>
             <div class="flex gap-3.5 flex-wrap">
-                <a href="{{ route($loc.'.survey') }}" wire:navigate class="bg-brand text-white px-[26px] py-[15px] font-semibold text-[15.5px] hover:bg-brand-dark">{{ $page->get('cta_primary') }}</a>
-                <a href="{{ route($loc.'.about') }}" wire:navigate class="border-[1.5px] border-ink text-ink px-[26px] py-[15px] font-semibold text-[15.5px] hover:bg-ink hover:text-white">{{ $page->get('cta_secondary') }}</a>
+                <a href="{{ route($loc.'.survey') }}" wire:navigate class="bg-brand text-white px-6 py-4 font-semibold text-base hover:bg-brand-dark">{{ $page->get('cta_primary') }}</a>
+                <a href="{{ route($loc.'.about') }}" wire:navigate class="border-2 border-ink text-ink px-6 py-4 font-semibold text-base hover:bg-ink hover:text-white">{{ $page->get('cta_secondary') }}</a>
             </div>
         </div>
         <div class="relative self-stretch">
-            <div aria-hidden="true" class="hidden lg:block absolute -bottom-5 -right-5 w-44 h-44 border-[3px] border-brand"></div>
-            <div class="relative h-full min-h-[260px] sm:min-h-[340px] bg-[#E8E7E2] overflow-hidden">
+            <div aria-hidden="true" class="hidden lg:block absolute -bottom-5 -right-5 w-44 h-44 border-3 border-brand"></div>
+            <div class="relative h-full min-h-65 sm:min-h-85 bg-wash overflow-hidden">
                 @if ($heroImage)
                     {{-- This is the LCP element: eager + high priority, never lazy.
                          alt="" because the adjacent h1 already carries the meaning. --}}
@@ -39,12 +39,12 @@
 
     {{-- Topics ticker --}}
     @if (count($topics))
-        <div class="ticker bg-ink text-white border-y border-[#2A2B2F]" aria-hidden="true">
+        <div class="ticker bg-ink text-white border-y border-ink-line" aria-hidden="true">
             <div class="ticker-track py-3.5">
                 @foreach (array_merge($topics, $topics) as $topic)
                     <span class="inline-flex items-center">
                         <span class="dot mx-5 shrink-0"></span>
-                        <span class="text-[13px] font-semibold tracking-[2px] uppercase font-display whitespace-nowrap">{{ $topic }}</span>
+                        <span class="text-sm font-semibold tracking-widest uppercase font-display whitespace-nowrap">{{ $topic }}</span>
                     </span>
                 @endforeach
             </div>
@@ -52,16 +52,16 @@
     @endif
 
     {{-- Three pillars --}}
-    <div class="max-w-[1216px] mx-auto px-5 sm:px-8 pt-10 lg:pt-16 pb-10 lg:pb-16">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-10 lg:pt-16 pb-10 lg:pb-16">
         <div class="border border-line">
-            <div class="px-7 py-5 border-b border-line text-[13.5px] font-bold tracking-[1.8px]">{{ $page->get('pillars_title') }}</div>
+            <div class="px-7 py-5 border-b border-line text-sm font-bold tracking-widest">{{ $page->get('pillars_title') }}</div>
             <div class="grid lg:grid-cols-3">
                 @foreach ($page->list('pillars') as $p)
                     <div class="flex gap-5 px-7 py-6 {{ ! $loop->last ? 'border-b lg:border-b-0 lg:border-r border-line' : '' }}">
-                        <span class="font-bold text-brand text-[15px]">{{ $p['num'] ?? '' }}</span>
+                        <span class="font-bold text-brand text-base">{{ $p['num'] ?? '' }}</span>
                         <div>
-                            <div class="font-semibold mb-[5px]">{{ $p['title'] ?? '' }}</div>
-                            <div class="text-[14.5px] leading-[1.55] text-muted">{{ $p['text'] ?? '' }}</div>
+                            <div class="font-semibold mb-1">{{ $p['title'] ?? '' }}</div>
+                            <div class="text-sm leading-normal text-muted">{{ $p['text'] ?? '' }}</div>
                         </div>
                     </div>
                 @endforeach
@@ -71,11 +71,11 @@
 
     {{-- People & technology --}}
     <div class="bg-paper border-y border-line">
-        <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-16">
-            <h2 class="text-2xl lg:text-3xl font-bold tracking-[-0.3px] text-pretty">{{ $page->get('intro_title') }}</h2>
-            <div class="grid gap-[18px]">
-                <div class="rich text-[16.5px] text-body">{!! $page->get('intro_body') !!}</div>
-                <a href="{{ route($loc.'.about') }}" wire:navigate class="text-[15px] font-semibold text-brand w-fit">{{ __('Повече за Съвета') }} →</a>
+        <div class="reveal max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-16">
+            <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-pretty">{{ $page->get('intro_title') }}</h2>
+            <div class="grid gap-4">
+                <div class="rich text-base text-body">{!! $page->get('intro_body') !!}</div>
+                <a href="{{ route($loc.'.about') }}" wire:navigate class="text-base font-semibold text-brand w-fit">{{ __('Повече за Съвета') }} →</a>
             </div>
         </div>
     </div>
@@ -91,17 +91,17 @@
                 '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
             ];
         @endphp
-        <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 pt-10 lg:pt-16">
-            <h2 class="text-2xl lg:text-3xl font-bold mb-[34px]">{{ $page->get('process_title') }}</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-[26px]">
+        <div class="reveal max-w-7xl mx-auto px-5 sm:px-8 pt-10 lg:pt-16">
+            <h2 class="text-2xl lg:text-3xl font-bold mb-8">{{ $page->get('process_title') }}</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach ($page->list('process') as $step)
                     @php $ghost = preg_replace('/\D/', '', (string) ($step['num'] ?? $loop->iteration)); @endphp
                     <div class="lift relative overflow-hidden border-t-4 {{ $loop->last ? 'border-brand' : 'border-ink' }} pt-5 pb-6 pr-3">
-                        <span aria-hidden="true" class="pointer-events-none select-none absolute -right-1 -bottom-6 leading-none font-display font-bold text-[104px] text-ink/[0.06]">{{ $ghost }}</span>
+                        <span aria-hidden="true" class="pointer-events-none select-none absolute -right-1 -bottom-6 leading-none font-display font-bold text-8xl text-ink/[0.06]">{{ $ghost }}</span>
                         <div class="relative">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="w-9 h-9 mb-4 {{ $loop->last ? 'text-brand' : 'text-ink' }}" aria-hidden="true">{!! $processIcons[$loop->index % count($processIcons)] !!}</svg>
-                            <div class="text-[17px] font-bold mb-2">{{ $step['title'] ?? '' }}</div>
-                            <p class="text-[14.5px] leading-[1.6] text-[#55565A]">{{ $step['text'] ?? '' }}</p>
+                            <div class="text-lg font-bold mb-2">{{ $step['title'] ?? '' }}</div>
+                            <p class="text-sm leading-relaxed text-hush">{{ $step['text'] ?? '' }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -134,21 +134,21 @@
              'caption' => __('Дял на предприятията с 10 и повече заети, използващи поне една технология на изкуствен интелект')],
         ];
     @endphp
-    <div class="reveal chart max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
-        <div class="grid lg:grid-cols-[1fr_1fr] gap-8 lg:gap-16 mb-9">
-            <h2 class="text-2xl lg:text-3xl font-bold tracking-[-0.3px] text-pretty">{{ __('Изоставането не започва при изкуствения интелект') }}</h2>
+    <div class="reveal chart max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-16">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 mb-9">
+            <h2 class="text-2xl lg:text-3xl font-bold tracking-tight text-pretty">{{ __('Изоставането не започва при изкуствения интелект') }}</h2>
             <div class="grid gap-3">
-                <p class="text-[16.5px] leading-[1.7] text-body">
+                <p class="text-base leading-relaxed text-body">
                     {{ __('България скъсява дистанцията при базовата дигитализация — от 47% на 55% от равнището на ЕС между 2021 и 2025 г. При облачните услуги обаче изоставането не намалява, а използването им се задържа на място между 2023 и 2025 г., докато ЕС добавя над седем пункта.') }}
                 </p>
-                <p class="text-[14.5px] leading-[1.6] text-muted">
+                <p class="text-sm leading-relaxed text-muted">
                     {{ __('Изкуственият интелект стъпва именно върху този слой. Националното проучване на Съвета ще покаже какво стои зад цифрите — кои процеси, кои пречки и кои сектори.') }}
                 </p>
-                <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-[15px] font-semibold text-brand-dark w-fit">{{ __('Към проучването') }} →</a>
+                <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-base font-semibold text-brand-dark w-fit">{{ __('Към проучването') }} →</a>
             </div>
         </div>
 
-        <div class="flex items-center gap-5 mb-5 text-[12.5px]">
+        <div class="flex items-center gap-5 mb-5 text-xs">
             <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-brand block"></span>{{ __('България') }}</span>
             <span class="flex items-center gap-2"><span aria-hidden="true" class="w-3 h-3 bg-eu block"></span>{{ __('ЕС-27') }}</span>
             <span class="text-faint">{{ __('% от предприятията') }}</span>
@@ -160,29 +160,29 @@
             @endforeach
         </div>
 
-        <p class="text-[12.5px] text-faint mt-5 leading-[1.5] max-w-[900px]">
+        <p class="text-xs text-faint mt-5 leading-normal max-w-4xl">
             {{ __('Източник: Евростат — :dii, :cloud и :ai. Предприятия с 10 и повече заети, без селско стопанство, добив и финансов сектор. От 2025 г. показателят за AI обхваща осем технологии вместо седем.', ['dii' => $dii['dataset'], 'cloud' => $cloud['dataset'], 'ai' => $ai['dataset']]) }}
             <a href="{{ $ai['source_url'] }}" rel="nofollow noopener" target="_blank" class="underline hover:text-ink">{{ __('Данните') }}</a>
         </p>
     </div>
 
     {{-- Latest news --}}
-    <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16">
-        <div class="flex justify-between items-baseline mb-[34px]">
+    <div class="reveal max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-16">
+        <div class="flex justify-between items-baseline mb-8">
             <h2 class="text-2xl lg:text-3xl font-bold">{{ $page->get('news_title') }}</h2>
-            <a href="{{ route($loc.'.news') }}" wire:navigate class="text-[15px] font-semibold text-brand">{{ __('Всички новини') }} →</a>
+            <a href="{{ route($loc.'.news') }}" wire:navigate class="text-base font-semibold text-brand">{{ __('Всички новини') }} →</a>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-[26px]">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($news as $article)
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="group lift border border-line block hover:border-ink">
-                    <div class="h-[180px] overflow-hidden bg-[#E8E7E2]">
+                    <div class="h-45 overflow-hidden bg-wash">
                         @if ($article->imageUrl())
                             <img src="{{ $article->imageUrl() }}" alt="" loading="lazy" decoding="async" class="photo w-full h-full object-cover block">
                         @endif
                     </div>
-                    <div class="px-[26px] pt-6 pb-7">
-                        <div class="text-[13px] text-faint mb-2.5">{{ $article->published_at?->translatedFormat('j F Y') }}</div>
-                        <div class="text-[17px] font-semibold leading-[1.4]">{{ $article->tr('title') }}</div>
+                    <div class="px-6 pt-6 pb-7">
+                        <div class="text-sm text-faint mb-2.5">{{ $article->published_at?->translatedFormat('j F Y') }}</div>
+                        <div class="text-lg font-semibold leading-snug">{{ $article->tr('title') }}</div>
                     </div>
                 </a>
             @empty
@@ -194,10 +194,10 @@
     {{-- Quote --}}
     @if ($page->get('quote_text'))
         <div class="bg-paper border-t border-line">
-            <div class="reveal max-w-[1216px] mx-auto px-5 sm:px-8 py-12 lg:py-[72px] text-center">
-                <div class="text-[13.5px] font-bold tracking-[2.2px] text-brand mb-6">{{ $page->get('quote_eyebrow') }}</div>
-                <p class="font-serif italic text-[21px] lg:text-[27px] leading-[1.5] max-w-[860px] mx-auto mb-[26px] text-pretty">„{{ $page->get('quote_text') }}“</p>
-                <a href="{{ route($loc.'.positions') }}" wire:navigate class="inline-block border-b-2 border-brand pb-[3px] font-semibold text-[15.5px]">{{ __('Всички становища') }}</a>
+            <div class="reveal max-w-7xl mx-auto px-5 sm:px-8 py-12 lg:py-18 text-center">
+                <div class="text-sm font-bold tracking-widest text-brand mb-6">{{ $page->get('quote_eyebrow') }}</div>
+                <p class="font-serif italic text-xl lg:text-2xl leading-normal max-w-4xl mx-auto mb-6 text-pretty">„{{ $page->get('quote_text') }}“</p>
+                <a href="{{ route($loc.'.positions') }}" wire:navigate class="inline-block border-b-2 border-brand pb-1 font-semibold text-base">{{ __('Всички становища') }}</a>
             </div>
         </div>
     @endif
