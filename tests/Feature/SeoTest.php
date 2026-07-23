@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Database\Seeders\SiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Middleware\TrustHosts;
 use Tests\TestCase;
 
 /**
@@ -113,6 +114,27 @@ class SeoTest extends TestCase
 
         // And the destination must be a real page, not another redirect.
         $this->get('/survey')->assertOk();
+    }
+
+    /**
+     * Host pinning must never lock a deployment out of its own domain.
+     *
+     * Laravel enforces trusted hosts outside local/testing, so trusting only
+     * the production host would make the staging deployment answer 400 on the
+     * domain it is actually served from.
+     */
+    public function test_trusted_hosts_include_this_deployments_own_domain(): void
+    {
+        config([
+            'app.url' => 'https://aicouncil.hosting.vladko.dev',
+            'site.seo.production_host' => 'ai.bcci.bg',
+        ]);
+
+        $middleware = new TrustHosts(app());
+        $hosts = (new \ReflectionMethod($middleware, 'hosts'))->invoke($middleware);
+
+        $this->assertContains('aicouncil.hosting.vladko.dev', $hosts, 'A deployment must trust its own APP_URL host.');
+        $this->assertContains('ai.bcci.bg', $hosts, 'The canonical production host must stay trusted.');
     }
 
     /** The LCP image must never be lazy-loaded (SEO.md:1048). */

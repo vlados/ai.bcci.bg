@@ -27,10 +27,16 @@ return Application::configure(basePath: dirname(__DIR__))
         // self-consistent set of canonical/hreflang/JSON-LD URLs for itself —
         // i.e. an instant duplicate of the whole site on any hostname pointed
         // at the server. Resolved lazily so config is available, and Laravel
-        // skips the check in local/testing.
-        $middleware->trustHosts(at: fn () => array_filter([
+        // skips the check entirely in local/testing.
+        //
+        // The host this deployment is actually reached on (APP_URL) is always
+        // trusted, or a staging deployment would 400 on its own domain. Add
+        // more with TRUSTED_HOSTS=a.example,b.example.
+        $middleware->trustHosts(at: fn () => array_values(array_unique(array_filter([
+            parse_url((string) config('app.url'), PHP_URL_HOST),
             config('site.seo.production_host'),
-        ]), subdomains: false);
+            ...array_map('trim', explode(',', (string) env('TRUSTED_HOSTS'))),
+        ]))), subdomains: false);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
