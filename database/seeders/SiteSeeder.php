@@ -36,7 +36,7 @@ class SiteSeeder extends Seeder
         $pages = [
             'global' => [
                 'seo_description' => $t(
-                    'Съветът по изкуствен интелект към БТПП работи за повишаване на конкурентоспособността на българския бизнес и за позиционирането на България сред лидерите в областта на изкуствения интелект.',
+                    'Съветът за изкуствен интелект към БТПП работи за повишаване на конкурентоспособността на българския бизнес и за позиционирането на България сред лидерите в областта на изкуствения интелект.',
                     'The AI Council at the Bulgarian Chamber of Commerce and Industry works to strengthen the competitiveness of Bulgarian business and to position Bulgaria among the leaders in artificial intelligence.'
                 ),
                 'topbar_tagline' => $t('Консултативен орган към Българската търговско-промишлена палата', 'An advisory body to the Bulgarian Chamber of Commerce and Industry'),
@@ -48,7 +48,7 @@ class SiteSeeder extends Seeder
                 'newsletter_text' => $t('Абонирайте се за ежедневния бюлетин на БТПП — последни новини, становища и събития.', 'Subscribe to BCCI’s daily bulletin — latest news, positions and events.'),
                 'newsletter_url' => 'https://www.bcci.bg',
                 'footer_address' => $t("ул. „Искър“ 9, 1058 София\nчрез секретариата на БТПП", "9 Iskar St, 1058 Sofia\nvia the BCCI secretariat"),
-                'copyright' => $t('© 2026 Съвет по изкуствен интелект към БТПП', '© 2026 AI Council at BCCI'),
+                'copyright' => $t('© 2026 Съвет за изкуствен интелект към БТПП', '© 2026 AI Council at BCCI'),
             ],
 
             'home' => [
@@ -79,13 +79,13 @@ class SiteSeeder extends Seeder
                 'news_title' => $t('Последни новини', 'Latest news'),
                 'quote_eyebrow' => $t('ИЗ СТАНОВИЩЕ НА СЪВЕТА', 'FROM A COUNCIL POSITION'),
                 'quote_text' => $t('Нашата позиция е базирана на балансиран подход — правила, които защитават обществения интерес, без да спират иновациите.', 'Our position is based on a balanced approach — rules that protect the public interest without stifling innovation.'),
-                'meta_title' => $t('Съвет по изкуствен интелект — БТПП', 'AI Council — Bulgarian Chamber of Commerce and Industry'),
+                'meta_title' => $t('Съвет за изкуствен интелект — БТПП', 'AI Council — Bulgarian Chamber of Commerce and Industry'),
             ],
 
             'about' => [
                 'hero_eyebrow' => $t('ЗА НАС', 'ABOUT US'),
                 'hero_title' => $t('Консултативен орган към Българската търговско-промишлена палата', 'An advisory body to the Bulgarian Chamber of Commerce and Industry'),
-                'hero_intro' => $t('Съветът по изкуствен интелект е създаден от експерти с убеждението, че AI технологиите ще играят ключова роля в дигиталната трансформация на бизнеса.', 'The AI Council was created by experts convinced that AI technologies will play a key role in the digital transformation of business.'),
+                'hero_intro' => $t('Съветът за изкуствен интелект е създаден от експерти с убеждението, че AI технологиите ще играят ключова роля в дигиталната трансформация на бизнеса.', 'The AI Council was created by experts convinced that AI technologies will play a key role in the digital transformation of business.'),
                 'goal_title' => $t('Нашата цел', 'Our goal'),
                 'goal_body' => $t(
                     '<p>Екипът на Съвета включва представители на технологичния сектор, образователните среди, науката, успешни юристи и предприемачи.</p><p>Целта ни е да изградим среда, в която знанието за изкуствения интелект е достъпно за всеки български гражданин и се използва по най-добрия начин от всяко българско предприятие — независимо от неговия размер и икономически сектор. Помагаме на бизнеса да разбере и внедри изкуствения интелект в своята дейност и инвестираме в хората, които ще изграждат бъдещето.</p>',
@@ -137,7 +137,7 @@ class SiteSeeder extends Seeder
             'survey' => [
                 'hero_eyebrow' => $t('НАЦИОНАЛНО ПРОУЧВАНЕ', 'NATIONAL SURVEY'),
                 'hero_title' => $t('Какво мисли българският бизнес за изкуствения интелект?', 'What does Bulgarian business think about artificial intelligence?'),
-                'hero_intro' => $t('А какви са нагласите на студентите? Съветът по изкуствен интелект към БТПП създаде мащабно национално проучване, което за първи път ще даде цялостна картина на нагласите, очакванията и предизвикателствата пред българските компании в контекста на навлизането на AI технологиите.', 'And what about students? The AI Council at BCCI has launched a large-scale national survey that will, for the first time, give a complete picture of the attitudes, expectations and challenges facing Bulgarian companies as AI technologies take hold.'),
+                'hero_intro' => $t('А какви са нагласите на студентите? Съветът за изкуствен интелект към БТПП създаде мащабно национално проучване, което за първи път ще даде цялостна картина на нагласите, очакванията и предизвикателствата пред българските компании в контекста на навлизането на AI технологиите.', 'And what about students? The AI Council at BCCI has launched a large-scale national survey that will, for the first time, give a complete picture of the attitudes, expectations and challenges facing Bulgarian companies as AI technologies take hold.'),
                 'box_eyebrow' => $t('ВКЛЮЧЕТЕ СЕ', 'GET INVOLVED'),
                 'box_title' => $t('Вашият опит е част от картината', 'Your experience is part of the picture'),
                 'box_text' => $t('Проучването е отворено за компании от всички сектори и региони, както и за студенти.', 'The survey is open to companies from all sectors and regions, as well as to students.'),
@@ -156,7 +156,7 @@ class SiteSeeder extends Seeder
             'partners' => [
                 'hero_eyebrow' => $t('ПАРТНЬОРИ', 'PARTNERS'),
                 'hero_title' => $t('Мрежа от съмишленици', 'A network of like-minded partners'),
-                'hero_intro' => $t('Съветът по изкуствен интелект е част от Българската търговско-промишлена палата и работи с организации, които споделят нашата визия за технологично грамотна и конкурентоспособна България.', 'The AI Council is part of the Bulgarian Chamber of Commerce and Industry and works with organisations that share our vision of a technologically literate and competitive Bulgaria.'),
+                'hero_intro' => $t('Съветът за изкуствен интелект е част от Българската търговско-промишлена палата и работи с организации, които споделят нашата визия за технологично грамотна и конкурентоспособна България.', 'The AI Council is part of the Bulgarian Chamber of Commerce and Industry and works with organisations that share our vision of a technologically literate and competitive Bulgaria.'),
                 'intro' => $t('Нашите партньори включват водещи бизнес организации, университети, технологични компании и международни участници в AI екосистемата.', 'Our partners include leading business organisations, universities, technology companies and international players in the AI ecosystem.'),
                 'join_title' => $t('Искате да се присъедините към мрежата ни?', 'Want to join our network?'),
                 'join_text' => $t('Ако вашата организация споделя нашата визия — свържете се с нас.', 'If your organisation shares our vision — get in touch.'),
@@ -166,13 +166,13 @@ class SiteSeeder extends Seeder
             'news' => [
                 'hero_eyebrow' => $t('НОВИНИ', 'NEWS'),
                 'hero_title' => $t('Последно от Съвета', 'Latest from the Council'),
-                'hero_intro' => $t('Новини, събития и инициативи на Съвета по изкуствен интелект.', 'News, events and initiatives of the AI Council.'),
+                'hero_intro' => $t('Новини, събития и инициативи на Съвета за изкуствен интелект.', 'News, events and initiatives of the AI Council.'),
             ],
 
             'contacts' => [
                 'hero_eyebrow' => $t('КОНТАКТИ', 'CONTACT'),
                 'hero_title' => $t('Свържете се с нас', 'Get in touch'),
-                'hero_intro' => $t('Имате въпрос, идея или искате да се включите в работата на Съвета по изкуствен интелект?', 'Have a question or an idea, or want to get involved in the work of the AI Council?'),
+                'hero_intro' => $t('Имате въпрос, идея или искате да се включите в работата на Съвета за изкуствен интелект?', 'Have a question or an idea, or want to get involved in the work of the AI Council?'),
                 'form_title' => $t('Пишете ни', 'Write to us'),
                 'card_title' => $t('ДАННИ ЗА КОНТАКТ', 'CONTACT DETAILS'),
             ],

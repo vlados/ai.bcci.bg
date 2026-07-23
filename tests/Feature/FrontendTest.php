@@ -56,7 +56,7 @@ class FrontendTest extends TestCase
     {
         $md = (new LlmsTxtBuilder)->build();
 
-        $this->assertStringContainsString('# Съвет по изкуствен интелект към БТПП', $md);
+        $this->assertStringContainsString('# Съвет за изкуствен интелект към Българската търговско-промишлена палата', $md);
         $this->assertStringContainsString(url('/about'), $md);
         $this->assertStringContainsString('ai-adoption-gap-bulgaria-eu-eurostat-2025', $md);
     }
@@ -97,7 +97,7 @@ class FrontendTest extends TestCase
     {
         $paths = [
             public_path('sitemap.xml') => '<urlset',
-            public_path('llms.txt') => '# Съвет по изкуствен интелект към БТПП',
+            public_path('llms.txt') => '# Съвет за изкуствен интелект към Българската търговско-промишлена палата',
         ];
         $backups = [];
         foreach (array_keys($paths) as $path) {

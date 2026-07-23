@@ -34,8 +34,15 @@ return [
     // llms.txt file. This is the machine-readable definition of who we are,
     // which is what GEO / answer-engines actually consume.
     'org' => [
-        'name' => ['bg' => 'Съвет по изкуствен интелект към БТПП', 'en' => 'AI Council at BCCI'],
-        'short' => ['bg' => 'Съвет по изкуствен интелект', 'en' => 'AI Council'],
+        // Names are taken verbatim from Art. 2 of the Правилник (rules of
+        // procedure), approved by the BCCI Executive Council in Protocol
+        // No 13/7-2025 of 27 May 2025. Do not paraphrase them: the Council is
+        // "Съвет ЗА изкуствен интелект", not "по".
+        'name' => [
+            'bg' => 'Съвет за изкуствен интелект към Българската търговско-промишлена палата',
+            'en' => 'Artificial Intelligence Council at the Bulgarian Chamber of Commerce and Industry',
+        ],
+        'short' => ['bg' => 'Съвет ИИ към БТПП', 'en' => 'AI Council at BCCI'],
         // BTPP/BCCI is a self-governing chamber under private law, not a state
         // body, so its advisory council must NOT claim GovernmentOrganization.
         'legal_type' => 'Organization',
@@ -46,7 +53,9 @@ return [
         'same_as' => [
             'https://www.bcci.bg',
         ],
-        'founding_date' => '2026',
+        // Established by decision of the BCCI Executive Council, Protocol
+        // No 13/7-2025, 13th session, 27 May 2025.
+        'founding_date' => '2025-05-27',
         // Used by the PostalAddress node; the street line comes from the
         // editable contact block so markup and visible address stay in step.
         'locality' => 'София',

@@ -7,7 +7,7 @@
 
 /*
 | Design tokens ported verbatim from the approved AI Council design
-| (Съвет по изкуствен интелект — БТПП). Tailwind v4 turns each --color-*
+| (Съвет за изкуствен интелект — БТПП). Tailwind v4 turns each --color-*
 | into utilities: text-brand, bg-paper, border-line, etc.
 */
 @theme {
