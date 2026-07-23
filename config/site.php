@@ -72,7 +72,12 @@ return [
 
     // SEO defaults.
     'seo' => [
-        'og_image' => 'assets/logo.png', // relative to public/
+        // Purpose-built 1200x630 social cards, one per locale. The bare logo
+        // used to be served here — at 1800x234 it is the wrong shape entirely
+        // and every platform cropped or letterboxed it into a sliver.
+        // Regenerate with: php artisan seo:og
+        'og_image' => ['bg' => 'assets/og-bg.png', 'en' => 'assets/og-en.png'],
+        'og_image_size' => ['width' => 1200, 'height' => 630],
         'twitter' => null,               // @handle, if one exists later
 
         // The one hostname allowed to be indexed. Any other host serving this

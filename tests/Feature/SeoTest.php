@@ -137,6 +137,32 @@ class SeoTest extends TestCase
         $this->assertContains('ai.bcci.bg', $hosts, 'The canonical production host must stay trusted.');
     }
 
+    /**
+     * The social card must be a real 1200x630 card, per locale.
+     *
+     * This used to point at the bare logo, which is 1800x234 — the wrong shape
+     * entirely, so every platform cropped it to a sliver.
+     */
+    public function test_open_graph_card_is_a_real_social_image(): void
+    {
+        $bg = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('assets/og-bg.png', $bg);
+        $this->assertStringContainsString('<meta property="og:image:width" content="1200">', $bg);
+        $this->assertStringContainsString('<meta property="og:image:height" content="630">', $bg);
+        $this->assertStringContainsString('og:image:alt', $bg);
+        $this->assertStringNotContainsString('og:image" content="'.asset('assets/logo.png'), $bg);
+
+        // The English pages must not advertise a Bulgarian card.
+        $this->assertStringContainsString('assets/og-en.png', $this->get('/en')->assertOk()->getContent());
+
+        foreach (['bg', 'en'] as $locale) {
+            $path = public_path("assets/og-{$locale}.png");
+            $this->assertFileExists($path);
+            [$width, $height] = getimagesize($path);
+            $this->assertSame([1200, 630], [$width, $height], "og-{$locale}.png must be 1200x630.");
+        }
+    }
+
     /** The LCP image must never be lazy-loaded (SEO.md:1048). */
     public function test_above_the_fold_imagery_is_eager(): void
     {

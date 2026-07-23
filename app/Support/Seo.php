@@ -159,7 +159,10 @@ class Seo
             ?? $orgName;
 
         $canonical = $this->canonical ?? request()->url();
-        $image = $this->image ?? asset(config('site.seo.og_image'));
+
+        // The default card is per-locale; a page-supplied image wins over it.
+        $usingDefaultImage = $this->image === null;
+        $image = $this->image ?? asset($this->localized(config('site.seo.og_image')));
         $ogLocale = $locale === 'bg' ? 'bg_BG' : 'en_US';
         $altLocale = $locale === 'bg' ? 'en_US' : 'bg_BG';
 
@@ -186,6 +189,18 @@ class Seo
         $out[] = '<meta property="og:description" content="'.e($description).'">';
         $out[] = '<meta property="og:url" content="'.e($canonical).'">';
         $out[] = '<meta property="og:image" content="'.e($image).'">';
+        if (str_starts_with($image, 'https://')) {
+            $out[] = '<meta property="og:image:secure_url" content="'.e($image).'">';
+        }
+        // Dimensions let a platform lay the card out before the image loads, so
+        // the preview never reflows. Only declared for the default card, whose
+        // size we actually know — a CMS upload could be anything.
+        if ($usingDefaultImage) {
+            $size = config('site.seo.og_image_size');
+            $out[] = '<meta property="og:image:width" content="'.e($size['width']).'">';
+            $out[] = '<meta property="og:image:height" content="'.e($size['height']).'">';
+        }
+        $out[] = '<meta property="og:image:alt" content="'.e($orgName).'">';
         $out[] = '<meta property="og:locale" content="'.e($ogLocale).'">';
         $out[] = '<meta property="og:locale:alternate" content="'.e($altLocale).'">';
         if ($this->type === 'article') {
