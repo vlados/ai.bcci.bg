@@ -17,10 +17,18 @@
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block min-h-55 bg-wash relative overflow-hidden">
                         {{-- The first card is above the fold and is usually the LCP
                              element on this page, so it must not be lazy-loaded. --}}
-                        <img data-morph src="{{ $article->imageUrl() }}" alt=""
+                        {{-- No `photo` class: that treatment is greyscale-until-hover,
+                             which would drain the colour the covers use to tell the
+                             Bulgarian series from the EU one. --}}
+                        {{-- The image column is a fixed 320px from lg up; below
+                             that the card stacks and it runs the full width. --}}
+                        <img data-morph src="{{ $article->coverSrc() }}" alt=""
+                             @if ($set = $article->coverSrcset())
+                                 srcset="{{ $set }}" sizes="(min-width: 1024px) 320px, 100vw"
+                             @endif
                              loading="{{ $loop->first ? 'eager' : 'lazy' }}"
                              @if ($loop->first) fetchpriority="high" @endif decoding="async"
-                             class="photo absolute inset-0 w-full h-full object-cover">
+                             class="absolute inset-0 w-full h-full object-cover">
                 </a>
                 @endif
                 <div class="px-5 py-6 lg:px-8 lg:pt-8 lg:pb-8">

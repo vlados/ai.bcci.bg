@@ -800,30 +800,65 @@ class SiteSeeder extends Seeder
             ],
         ];
 
-        // Cover images: these articles are data journalism, not photo stories,
-        // so the covers are the figures themselves rather than stock imagery.
-        // Rendered by `php artisan news:covers` and committed; the design lives
-        // in resources/news/cover.html.
-        $images = collect([
-            'ai-adoption-gap-bulgaria-eu-eurostat-2025',
-            'why-companies-that-considered-ai-decided-against-it',
-            'ai-and-digitalisation-in-bulgaria-2026',
-        ])->mapWithKeys(fn (string $slug) => [$slug => "/assets/news/{$slug}.png"])->all();
-
         foreach ($news as $n) {
-            NewsArticle::updateOrCreate(
+            $article = NewsArticle::updateOrCreate(
                 ['slug' => $n['slug']],
                 [
                     'title' => $n['title'],
                     'excerpt' => $n['excerpt'],
                     'body' => $n['body'],
                     'meta_description' => $n['meta_description'] ?? null,
-                    'image_url' => $images[$n['slug']] ?? null,
                     'published_at' => $n['date'],
                     'is_published' => true,
                 ],
             );
+
+            $this->attachCover($article);
         }
+    }
+
+    /**
+     * Cover images: these articles are data journalism, not photo stories, so
+     * the covers are the figures themselves rather than stock imagery. They are
+     * rendered by `php artisan news:covers` and committed under public/assets;
+     * the design lives in resources/news/cover.html.
+     *
+     * `preservingOriginal` keeps that committed source file in place — the
+     * media library copies it rather than moving it — and the collection is
+     * `singleFile`, so re-seeding replaces the cover instead of stacking a
+     * second one behind it.
+     *
+     * The `seeded` custom property is what makes a cover safe to overwrite.
+     * Seeding is routine on a development box, and an editor who uploads a
+     * cover through the admin should not lose it the next time someone runs
+     * `db:seed` — so only covers this method placed are ever replaced.
+     */
+    protected function attachCover(NewsArticle $article): void
+    {
+        $source = public_path("assets/news/{$article->slug}.png");
+
+        if (! is_file($source)) {
+            return;
+        }
+
+        $existing = $article->getFirstMedia(NewsArticle::COVER);
+
+        if ($existing) {
+            // Uploaded by a human through the admin — leave it alone.
+            if (! $existing->getCustomProperty('seeded')) {
+                return;
+            }
+
+            // Already carrying this exact file.
+            if ($existing->getCustomProperty('sha1') === sha1_file($source)) {
+                return;
+            }
+        }
+
+        $article->addMedia($source)
+            ->preservingOriginal()
+            ->withCustomProperties(['seeded' => true, 'sha1' => sha1_file($source)])
+            ->toMediaCollection(NewsArticle::COVER);
     }
 
     protected function seedAdmin(): void

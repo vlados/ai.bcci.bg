@@ -2,11 +2,12 @@
 
 namespace App\Filament\Admin\Resources\NewsArticles\Schemas;
 
+use App\Models\NewsArticle;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -26,12 +27,15 @@ class NewsArticleForm
                     ->maxLength(255)
                     ->helperText('Използва се в адреса: /news/{slug}'),
                 DatePicker::make('published_at')->label('Дата на публикуване')->required()->default(now()),
-                FileUpload::make('image')->label('Изображение (качване)')->image()->imageEditor()->directory('news')->columnSpanFull(),
-                // Not ->url(): the generated covers are stored as site-relative
-                // paths (/assets/news/…), which that rule rejects.
-                TextInput::make('image_url')->label('или URL на изображение')->columnSpanFull()
-                    ->rule('regex:#^(https?://|/)#')
-                    ->helperText('Използва се, ако не е качено изображение. Пълен адрес (https://…) или път в сайта (/assets/…).'),
+                SpatieMediaLibraryFileUpload::make('cover')
+                    ->label('Изображение')
+                    ->collection(NewsArticle::COVER)
+                    ->image()
+                    ->imageEditor()
+                    ->columnSpanFull()
+                    // 1800 is the largest generated size; a narrower upload is
+                    // accepted but gets upscaled to fill it.
+                    ->helperText('Съотношение 3:2, минимум 1800×1200 пиксела.'),
                 Toggle::make('is_published')->label('Публикувана')->default(true),
             ])->columns(2),
 

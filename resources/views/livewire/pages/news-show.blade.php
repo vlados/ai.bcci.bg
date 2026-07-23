@@ -17,7 +17,13 @@
                  the image cannot shift the article text down as it decodes, and
                  it gives the view transition a stable target — without it the
                  morph briefly collapsed to a zero-height line before popping. --}}
-            <img src="{{ $article->imageUrl() }}" alt="" loading="eager" fetchpriority="high" decoding="async"
+            <img src="{{ $article->coverSrc() }}" alt="" loading="eager" fetchpriority="high" decoding="async"
+                 {{-- The article column is max-w-3xl (768px) less its own
+                      horizontal padding, so the image tops out at 704px. --}}
+                 @if ($set = $article->coverSrcset())
+                     srcset="{{ $set }}"
+                     sizes="(min-width: 768px) 704px, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
+                 @endif
                  style="view-transition-name: article-hero"
                  class="w-full aspect-3/2 object-cover mb-10 border border-line">
         @endif
@@ -36,7 +42,11 @@
                         <a href="{{ route($loc.'.news.show', $item) }}" wire:navigate class="group lift border border-line bg-white block hover:border-ink">
                             <div class="h-45 overflow-hidden bg-wash">
                                 @if ($item->imageUrl())
-                                    <img src="{{ $item->imageUrl() }}" alt="{{ $item->tr('title') }}" loading="lazy" class="photo w-full h-full object-cover block">
+                                    <img src="{{ $item->coverSrc() }}" alt="{{ $item->tr('title') }}" loading="lazy"
+                                         @if ($set = $item->coverSrcset())
+                                             srcset="{{ $set }}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                                         @endif
+                                         class="w-full h-full object-cover block">
                                 @endif
                             </div>
                             <div class="px-6 pt-6 pb-7">

@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\Process;
  *
  * A development-time command, and a sibling of `seo:og`: it drives headless
  * Chrome so the covers use the site's real fonts and brand tokens, then hands
- * the result to ImageMagick to land on exactly 1200x800. Neither tool is
+ * the result to ImageMagick to land on exactly 1800x1200. Neither tool is
  * needed in production — the PNGs are committed.
+ *
+ * 1800 is the largest width in NewsArticle::COVER_SIZES, which is what the
+ * article hero needs on a 2x display. Rendering smaller than that would make
+ * the biggest conversion an upscale of this file.
  *
  * The articles are Eurostat data journalism, so the covers are the figures
  * themselves rather than stock photography. They carry no prose: a source
  * plate, the two series in the site's own colours (Bulgaria red, EU-27 blue)
- * and the numbers. That keeps one image valid for both locales, which matters
- * because `news_articles.image_url` is a single column, not a translated one.
+ * and the numbers. That keeps one image valid for both locales — an article
+ * has a single `cover` media collection, not one per language.
+ *
+ * The PNGs written here are the committed source files. `SiteSeeder` copies
+ * them into the media library; re-run this command and re-seed to publish a
+ * design change.
  *
  * Edit resources/news/cover.html to change the design.
  */
@@ -106,11 +114,13 @@ class GenerateNewsCovers extends Command
                 $html,
             ));
 
-            // Rendered at 2x then downsampled, so the figures stay crisp at the
-            // 1200x800 the article hero and the card grid actually use.
+            // The template is authored at 1200x800 CSS pixels. Rendering at 3x
+            // gives 3600x2400, which halves cleanly to the 1800x1200 output —
+            // an exact 2:1 downsample, which keeps the numerals crisp in a way
+            // an awkward ratio would not.
             Process::timeout(120)->run([
                 $chrome, '--headless', '--disable-gpu', '--hide-scrollbars', '--no-sandbox',
-                '--force-device-scale-factor=2', '--window-size=1200,800',
+                '--force-device-scale-factor=3', '--window-size=1200,800',
                 '--virtual-time-budget=8000', "--screenshot={$raw}", "file://{$page}",
             ]);
 
@@ -120,13 +130,13 @@ class GenerateNewsCovers extends Command
                 return self::FAILURE;
             }
 
-            $magick = Process::run(['magick', $raw, '-resize', '1200x800', '-strip',
+            $magick = Process::run(['magick', $raw, '-resize', '1800x1200', '-strip',
                 '-define', 'png:compression-level=9', $out]);
 
             if (! $magick->successful()) {
-                // No ImageMagick: keep the 2x render, which is still valid.
+                // No ImageMagick: keep the 3x render, which is still valid.
                 copy($raw, $out);
-                $this->warn("ImageMagick unavailable — kept the 2x render for {$slug}.");
+                $this->warn("ImageMagick unavailable — kept the 3x render for {$slug}.");
             }
 
             $this->info(sprintf('%s  (%s KB)', $out, number_format(filesize($out) / 1024)));

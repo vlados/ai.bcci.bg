@@ -6,15 +6,20 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:1200px;height:800px}
-  body{font-family:'Sofia Sans',sans-serif;color:#121316;display:flex;overflow:hidden;background:#fff}
+  body{font-family:'Sofia Sans',sans-serif;color:#121316;background:#f6f5f2;
+       display:flex;align-items:center;justify-content:center;overflow:hidden}
 
-  .top{position:absolute;top:0;left:0;right:0;height:10px;background:#ee272f;z-index:3}
-  .main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 56px 0 78px}
-  .band{width:300px;background:#f6f5f2;border-left:1px solid #e6e4df;position:relative;overflow:hidden}
-  /* Footer wordmark, bled off two edges the way the site does it. */
-  .ghost{position:absolute;right:-34px;bottom:-104px;line-height:1;
-         font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;font-size:306px;
-         color:rgba(18,19,22,.075);letter-spacing:-.03em}
+  .top{position:absolute;top:0;left:0;right:0;height:10px;background:#ee272f}
+
+  /*
+    The composition is centred, and every element is kept inside an 850x530 box
+    in the middle of the frame, because this image is cropped three different
+    ways: square-ish in the news index (the card's height follows its excerpt,
+    so a long one crops the sides hard), letterboxed on the home page, and not
+    at all on the article itself. Anything set against an edge is lost in at
+    least one of those. An earlier left-aligned version lost the first digit.
+  */
+  .main{width:850px;display:flex;flex-direction:column;align-items:center;text-align:center}
 
   /* Source plate. The dataset code is the caption: it states precisely which
      Eurostat series the figures come from without committing to a language.
@@ -22,39 +27,39 @@
      as ISOC_EB_AI, which is not what the dataset is called. */
   .plate{font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;font-size:25px;
          letter-spacing:.055em;color:#6a6b70}
-  .rule{width:72px;height:5px;background:#ee272f;margin:26px 0 0}
+  .rule{width:72px;height:5px;background:#ee272f;margin-top:26px}
 
   /* One shared grid for the legend and every figure row, so the two series stay
      in the same two columns however many rows a cover carries. Bulgaria is set
      flush against the divider and the EU away from it: the whitespace between
      the two numbers is the gap the articles are about. */
-  .grid{display:grid;grid-template-columns:1fr 1fr;column-gap:0}
-  .col-bg{text-align:right;padding-right:34px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .col-bg{text-align:right;padding-right:30px}
   .col-eu{text-align:left;padding-left:30px}
 
-  .legend{margin-top:40px;font-size:23px;font-weight:600;color:#37383c}
-  .legend span{display:inline-flex;align-items:center;gap:11px}
+  .legend{margin-top:38px;font-size:23px;font-weight:600;color:#37383c}
+  .legend span{display:flex;align-items:center;gap:11px}
   .swatch{width:15px;height:15px;display:block}
   .swatch-bg{background:#ee272f}
   .swatch-eu{background:#003399}
 
-  .rows{margin-top:14px;position:relative}
+  .rows{margin-top:14px;position:relative;width:100%}
   /* The hairline the figures face across. */
-  .rows::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:#e6e4df}
+  .rows::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1px;background:#dcdad4}
   .row{align-items:baseline;font-family:'Sofia Sans Condensed',sans-serif;font-weight:700;
        font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.06}
-  .row + .row{margin-top:var(--row-gap,18px)}
+  .row + .row{margin-top:var(--row-gap,16px)}
   .bg{color:#ee272f}
   .eu{color:#003399}
 
   /* A single figure gets the whole frame; a stack of them is set smaller so
-     four rows still clear the footer. */
+     four rows still clear the footer inside the safe box. */
   body.rows-1 .row{font-size:132px}
-  body.rows-2 .row{font-size:104px;--row-gap:22px}
-  body.rows-3 .row{font-size:82px;--row-gap:20px}
-  body.rows-4 .row{font-size:66px;--row-gap:16px}
+  body.rows-2 .row{font-size:100px;--row-gap:18px}
+  body.rows-3 .row{font-size:76px;--row-gap:14px}
+  body.rows-4 .row{font-size:60px;--row-gap:12px}
 
-  .foot{display:flex;align-items:center;gap:12px;margin-top:44px;font-size:21px;font-weight:600;color:#6a6b70}
+  .foot{display:flex;align-items:center;gap:12px;margin-top:40px;font-size:21px;font-weight:600;color:#6a6b70}
   .dot{width:10px;height:10px;border-radius:99px;background:#ee272f;display:block}
 </style></head>
 <body class="rows-{{COUNT}}">
@@ -72,5 +77,4 @@
 
     <div class="foot"><span class="dot"></span><span>ai.bcci.bg</span></div>
   </div>
-  <div class="band"><div class="ghost">ai</div></div>
 </body></html>

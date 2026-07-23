@@ -24,7 +24,9 @@ class NewsShow extends SitePage
 
         $title = $article->tr('meta_title') ?: $article->tr('title');
         $desc = $article->tr('meta_description') ?: $article->tr('excerpt') ?: $article->tr('title');
-        $image = $article->image ? asset('storage/'.$article->image) : null;
+        // Already an absolute URL out of the media library; Seo::image() passes
+        // those through untouched and only resolves relative paths.
+        $image = $article->imageUrl();
         $published = optional($article->published_at)?->toIso8601String();
 
         /** @var Seo $seo */
@@ -33,7 +35,7 @@ class NewsShow extends SitePage
             ->description($desc)
             ->canonical(url()->current())
             ->article($published, optional($article->updated_at)?->toIso8601String())
-            ->image($article->image ? 'storage/'.$article->image : null)
+            ->image($image)
             ->breadcrumbs([
                 ['name' => $this->navLabel('home'), 'url' => route($loc.'.home')],
                 ['name' => $this->navLabel('news'), 'url' => route($loc.'.news')],

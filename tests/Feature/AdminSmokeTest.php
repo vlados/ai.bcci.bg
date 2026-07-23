@@ -10,6 +10,8 @@ use App\Models\Position;
 use App\Models\User;
 use Database\Seeders\SiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -121,5 +123,104 @@ class AdminSmokeTest extends TestCase
         $this->assertSame('Тестова новина', $article->title['bg']);
         $this->assertSame('Test article', $article->title['en']);
         $this->assertStringContainsString('Съдържание', $article->body['bg']);
+    }
+
+    public function test_seeded_articles_carry_the_committed_cover(): void
+    {
+        $articles = NewsArticle::all();
+        $this->assertNotEmpty($articles);
+
+        foreach ($articles as $article) {
+            $this->assertNotNull($article->imageUrl(), "No cover attached for {$article->slug}");
+        }
+    }
+
+    public function test_news_form_uploads_a_cover_into_the_media_library(): void
+    {
+        $this->actingAs($this->admin);
+
+        Livewire::test(CreateNewsArticle::class)
+            ->fillForm([
+                'slug' => 'article-with-cover',
+                'published_at' => '2026-07-20',
+                'is_published' => true,
+                'title' => ['bg' => 'С корица', 'en' => 'With a cover'],
+                'cover' => [UploadedFile::fake()->image('cover.png', 1200, 800)],
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $article = NewsArticle::where('slug', 'article-with-cover')->firstOrFail();
+
+        $this->assertCount(1, $article->getMedia(NewsArticle::COVER));
+        $this->assertNotNull($article->imageUrl());
+
+        // The disk matters as much as the row: the app's default disk is
+        // `local`, which is not web-served, and Filament will hand its own
+        // default to the media library unless the collection pins one. A cover
+        // written there exists in the database and 404s in the browser.
+        $media = $article->getFirstMedia(NewsArticle::COVER);
+        $this->assertSame('public', $media->disk);
+        Storage::disk('public')->assertExists("{$media->id}/{$media->file_name}");
+    }
+
+    public function test_a_full_size_cover_generates_every_conversion(): void
+    {
+        $media = NewsArticle::firstOrFail()->getFirstMedia(NewsArticle::COVER);
+
+        $this->assertSame(1800, $media->getCustomProperty('width'));
+
+        foreach (array_keys(NewsArticle::COVER_SIZES) as $name) {
+            $this->assertTrue($media->hasGeneratedConversion($name), "Missing conversion: {$name}");
+        }
+    }
+
+    /**
+     * Conversions walk the ladder until one rung covers the source and then
+     * stop, so an undersized upload is never blown up to 1800px.
+     */
+    public function test_conversions_stop_at_the_first_size_covering_the_source(): void
+    {
+        $this->actingAs($this->admin);
+
+        Livewire::test(CreateNewsArticle::class)
+            ->fillForm([
+                'slug' => 'small-cover',
+                'published_at' => '2026-07-20',
+                'is_published' => true,
+                'title' => ['bg' => 'Малка корица', 'en' => 'Small cover'],
+                'cover' => [UploadedFile::fake()->image('small.png', 900, 600)],
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $article = NewsArticle::where('slug', 'small-cover')->firstOrFail();
+        $media = $article->getFirstMedia(NewsArticle::COVER);
+
+        $this->assertSame(900, $media->getCustomProperty('width'));
+        $this->assertTrue($media->hasGeneratedConversion('card'), '600 is below the 900px source');
+        $this->assertTrue($media->hasGeneratedConversion('wide'), '1200 is the rung that covers 900px');
+        $this->assertFalse($media->hasGeneratedConversion('hero'), '1800 would be pure upscale');
+
+        // The srcset must advertise only what exists, with honest descriptors.
+        $this->assertStringContainsString('600w', $article->coverSrcset());
+        $this->assertStringContainsString('1200w', $article->coverSrcset());
+        $this->assertStringNotContainsString('1800w', $article->coverSrcset());
+    }
+
+    /**
+     * The `cover` collection is `singleFile`, which is what makes re-seeding
+     * idempotent rather than stacking a new cover behind the old one.
+     */
+    public function test_a_second_cover_replaces_the_first(): void
+    {
+        $article = NewsArticle::firstOrFail();
+        $source = public_path("assets/news/{$article->slug}.png");
+        $this->assertFileExists($source);
+
+        $article->addMedia($source)->preservingOriginal()->toMediaCollection(NewsArticle::COVER);
+        $article->addMedia($source)->preservingOriginal()->toMediaCollection(NewsArticle::COVER);
+
+        $this->assertCount(1, $article->refresh()->getMedia(NewsArticle::COVER));
     }
 }

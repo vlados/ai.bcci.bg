@@ -177,7 +177,11 @@
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="group lift border border-line block hover:border-ink">
                     <div class="h-45 overflow-hidden bg-wash">
                         @if ($article->imageUrl())
-                            <img src="{{ $article->imageUrl() }}" alt="" loading="lazy" decoding="async" class="photo w-full h-full object-cover block">
+                            <img src="{{ $article->coverSrc() }}" alt="" loading="lazy" decoding="async"
+                                 @if ($set = $article->coverSrcset())
+                                     srcset="{{ $set }}" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                                 @endif
+                                 class="w-full h-full object-cover block">
                         @endif
                     </div>
                     <div class="px-6 pt-6 pb-7">
