@@ -1,4 +1,4 @@
-# Съвет по изкуствен интелект — БТПП (AI Council at BCCI)
+# Съвет за изкуствен интелект към БТПП (AI Council at BCCI)
 
 Bilingual (BG/EN) website for the AI Council, an advisory body to the Bulgarian
 Chamber of Commerce and Industry. Content is managed through a Filament admin
@@ -157,7 +157,9 @@ The following are seeded as placeholders and should be updated in the admin
 - Contact email / phone / address
 - Newsletter (ИНФОБИЗНЕС) subscribe URL — currently links to `bcci.bg`
 - Survey URL on the Survey page
-- Sample news, positions, partners and team members
+
+Team, partners and positions are no longer seeded with placeholders — they ship
+empty and their sections stay hidden until you add real records.
 
 ## Deferred (production hardening)
 
