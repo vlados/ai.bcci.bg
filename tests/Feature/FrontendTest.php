@@ -46,7 +46,7 @@ class FrontendTest extends TestCase
 
     public function test_news_detail_and_feed(): void
     {
-        $this->get('/news/stanovishte-ai-act')->assertOk()->assertSee('NewsArticle', false);
+        $this->get('/news/ai-adoption-gap-bulgaria-eu-eurostat-2025')->assertOk()->assertSee('NewsArticle', false);
         $this->get('/feed')->assertOk()->assertHeader('content-type', 'application/rss+xml; charset=UTF-8');
         $this->get('/robots.txt')->assertOk()->assertSee('Sitemap: '.url('/sitemap.xml'));
     }
@@ -58,7 +58,7 @@ class FrontendTest extends TestCase
 
         $this->assertStringContainsString('# Съвет по изкуствен интелект към БТПП', $md);
         $this->assertStringContainsString(url('/about'), $md);
-        $this->assertStringContainsString('stanovishte-ai-act', $md);
+        $this->assertStringContainsString('ai-adoption-gap-bulgaria-eu-eurostat-2025', $md);
     }
 
     public function test_feed_is_cached_and_flushed_when_an_article_changes(): void
@@ -66,14 +66,14 @@ class FrontendTest extends TestCase
         $first = $this->get('/feed')->assertOk()->getContent();
 
         // A direct DB write bypasses the model events, so the cache must still serve.
-        DB::table('news_articles')->where('slug', 'stanovishte-ai-act')->update(['is_published' => false]);
+        DB::table('news_articles')->where('slug', 'ai-adoption-gap-bulgaria-eu-eurostat-2025')->update(['is_published' => false]);
         $this->assertSame($first, $this->get('/feed')->getContent());
 
         // Going through the model fires `saved`, which drops the cache.
-        $article = NewsArticle::where('slug', 'stanovishte-ai-act')->first();
+        $article = NewsArticle::where('slug', 'ai-adoption-gap-bulgaria-eu-eurostat-2025')->first();
         $article->update(['is_published' => false]);
 
-        $this->assertStringNotContainsString('stanovishte-ai-act', $this->get('/feed')->getContent());
+        $this->assertStringNotContainsString('ai-adoption-gap-bulgaria-eu-eurostat-2025', $this->get('/feed')->getContent());
     }
 
     /** The sitemap is a generated file, not a route — assert on what it renders. */
@@ -90,7 +90,7 @@ class FrontendTest extends TestCase
             $this->assertStringContainsString('<loc>'.url("/en/{$slug}").'</loc>', $xml);
         }
 
-        $this->assertStringContainsString('<loc>'.url('/news/stanovishte-ai-act').'</loc>', $xml);
+        $this->assertStringContainsString('<loc>'.url('/news/ai-adoption-gap-bulgaria-eu-eurostat-2025').'</loc>', $xml);
     }
 
     public function test_seo_generate_command_writes_both_files(): void

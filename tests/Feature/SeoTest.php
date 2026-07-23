@@ -82,11 +82,11 @@ class SeoTest extends TestCase
      */
     public function test_breadcrumbs_are_visible_on_interior_pages_only(): void
     {
-        $article = $this->get('/news/stanovishte-ai-act')->assertOk()->getContent();
+        $article = $this->get('/news/ai-adoption-gap-bulgaria-eu-eurostat-2025')->assertOk()->getContent();
         $this->assertStringContainsString('aria-current="page"', $article);
         $this->assertStringContainsString('BreadcrumbList', $article);
 
-        $en = $this->get('/en/news/stanovishte-ai-act')->assertOk()->getContent();
+        $en = $this->get('/en/news/ai-adoption-gap-bulgaria-eu-eurostat-2025')->assertOk()->getContent();
         $this->assertStringContainsString('News', $en);
 
         // The homepage trail is a single item, which describes no path at all —
@@ -108,8 +108,16 @@ class SeoTest extends TestCase
             );
         }
 
-        // First news card is above the fold; the rest may lazy-load.
+        // First news card is above the fold; the rest may lazy-load. Only
+        // asserted when a cover image actually exists — the data-journalism
+        // articles deliberately ship without stock photography.
         $news = $this->get('/news')->assertOk()->getContent();
-        $this->assertStringContainsString('loading="eager"', $news);
+        if (str_contains($news, '<img data-morph')) {
+            $this->assertMatchesRegularExpression(
+                '/<img data-morph[^>]*loading="eager"/',
+                $news,
+                'The first news card is above the fold and must not be lazy-loaded.'
+            );
+        }
     }
 }

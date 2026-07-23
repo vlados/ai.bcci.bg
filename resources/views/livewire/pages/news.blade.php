@@ -10,19 +10,19 @@
 
     <div class="max-w-[1216px] mx-auto px-5 sm:px-8 py-10 lg:py-16 grid gap-[26px]">
         @forelse ($articles as $article)
-            <article data-morph-card class="reveal group lift border border-line grid lg:grid-cols-[320px_1fr]">
+            {{-- Without a cover image the card runs full width rather than
+                 reserving 320px for an empty grey box. --}}
+            <article data-morph-card class="reveal group lift border border-line grid {{ $article->imageUrl() ? 'lg:grid-cols-[320px_1fr]' : '' }}">
+                @if ($article->imageUrl())
                 <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block min-h-[220px] bg-[#E8E7E2] relative overflow-hidden">
-                    @if ($article->imageUrl())
                         {{-- The first card is above the fold and is usually the LCP
                              element on this page, so it must not be lazy-loaded. --}}
                         <img data-morph src="{{ $article->imageUrl() }}" alt=""
                              loading="{{ $loop->first ? 'eager' : 'lazy' }}"
                              @if ($loop->first) fetchpriority="high" @endif decoding="async"
                              class="photo absolute inset-0 w-full h-full object-cover">
-                    @else
-                        <span class="absolute inset-0 flex items-center justify-center text-[13px] text-[#9C9D9F]">{{ __('Изображение') }}</span>
-                    @endif
                 </a>
+                @endif
                 <div class="px-5 py-6 lg:px-[34px] lg:pt-[30px] lg:pb-[34px]">
                     <div class="text-[13px] text-faint mb-2.5">{{ $article->published_at?->translatedFormat('j F Y') }}</div>
                     <a href="{{ route($loc.'.news.show', $article) }}" wire:navigate class="block text-[21px] font-bold leading-[1.35] mb-3 text-pretty hover:text-brand">{{ $article->tr('title') }}</a>
