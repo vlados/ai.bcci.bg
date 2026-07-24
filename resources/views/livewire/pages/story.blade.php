@@ -250,7 +250,7 @@
             ) }}</p>
 
             <div class="st-cta" data-enter>
-                <a href="{{ route($loc.'.survey') }}" wire:navigate class="st-cta__primary">{{ $t('Към националното проучване', 'To the national survey') }} →</a>
+                <a href="{{ route($loc.'.survey') }}" wire:navigate data-track="cta_click" data-cta="story_survey" class="st-cta__primary">{{ $t('Към националното проучване', 'To the national survey') }} →</a>
                 <a href="{{ route($loc.'.news') }}" wire:navigate class="st-cta__link">{{ $t('Пълните анализи', 'The full analyses') }}</a>
             </div>
 

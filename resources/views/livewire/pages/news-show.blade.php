@@ -79,8 +79,10 @@
                 </div>
                 <div class="lf-share">
                     <span class="lf-share__label">{{ __('Споделете') }}</span>
-                    <a href="{{ $shareX }}" target="_blank" rel="noopener noreferrer" aria-label="X">X</a>
-                    <a href="{{ $shareIn }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+                    <a href="{{ $shareX }}" target="_blank" rel="noopener noreferrer" aria-label="X"
+                       data-track="article_share" data-network="x" data-article="{{ $article->slug }}">X</a>
+                    <a href="{{ $shareIn }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                       data-track="article_share" data-network="linkedin" data-article="{{ $article->slug }}">in</a>
                 </div>
             </footer>
         </div>

@@ -13,7 +13,9 @@
             <div class="text-sm font-bold tracking-widest text-brand mb-4">{{ $page->get('box_eyebrow') }}</div>
             <div class="text-xl lg:text-2xl font-bold text-white mb-3.5 tracking-tight text-pretty">{{ $page->get('box_title') }}</div>
             <p class="text-base leading-relaxed text-on-ink mb-8">{{ $page->get('box_text') }}</p>
-            <a href="{{ $page->get('box_url') ?: '#' }}" target="_blank" rel="noopener" class="inline-block bg-brand text-white px-8 py-4 font-semibold text-base hover:bg-brand-dark">{{ $page->get('box_button') }}</a>
+            <a href="{{ $page->get('box_url') ?: '#' }}" target="_blank" rel="noopener"
+               @if ($page->get('box_url')) data-track="survey_start" data-location="survey_page" @endif
+               class="inline-block bg-brand text-white px-8 py-4 font-semibold text-base hover:bg-brand-dark">{{ $page->get('box_button') }}</a>
         </div>
         <div class="border border-line">
             <div class="px-7 py-5 border-b border-line text-sm font-bold tracking-widest">{{ $page->get('results_title') }}</div>

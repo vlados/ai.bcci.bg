@@ -33,6 +33,7 @@
                 <div class="text-white font-semibold text-sm mb-3">{{ $global->get('newsletter_title') }}</div>
                 <p class="text-sm leading-relaxed mb-3.5">{{ $global->get('newsletter_text') }}</p>
                 <a href="{{ $newsletterUrl ?: 'https://www.bcci.bg' }}" target="_blank" rel="noopener"
+                   data-track="newsletter_subscribe" data-location="footer"
                    class="inline-block bg-brand text-white px-5 py-3 font-semibold text-sm hover:bg-brand-dark">
                     {{ __('Абонирай ме') }}
                 </a>

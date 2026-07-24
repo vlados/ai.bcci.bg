@@ -33,6 +33,11 @@ class Contacts extends SitePage
 
         $this->reset(['name', 'email', 'message']);
         $this->sent = true;
+
+        // Analytics: a browser event the OpenPanel glue turns into a
+        // `contact_submit` — fired here so it counts only a persisted message,
+        // never a failed validation or a mere button click.
+        $this->dispatch('contact-submitted');
     }
 
     public function render()

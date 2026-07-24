@@ -20,8 +20,8 @@
             <h1 class="uppercase text-4xl sm:text-6xl lg:text-7xl leading-none font-bold text-ink mb-7 tracking-tight text-pretty">{{ $titleHead }} @if ($titleTail)<span class="text-brand">{{ $titleTail }}</span>@endif</h1>
             <p class="text-lg leading-relaxed text-body mb-9 max-w-xl">{{ $page->get('hero_intro') }}</p>
             <div class="flex gap-3.5 flex-wrap">
-                <a href="{{ route($loc.'.survey') }}" wire:navigate class="bg-brand text-white px-6 py-4 font-semibold text-base hover:bg-brand-dark">{{ $page->get('cta_primary') }}</a>
-                <a href="{{ route($loc.'.about') }}" wire:navigate class="border-2 border-ink text-ink px-6 py-4 font-semibold text-base hover:bg-ink hover:text-white">{{ $page->get('cta_secondary') }}</a>
+                <a href="{{ route($loc.'.survey') }}" wire:navigate data-track="cta_click" data-cta="hero_primary" class="bg-brand text-white px-6 py-4 font-semibold text-base hover:bg-brand-dark">{{ $page->get('cta_primary') }}</a>
+                <a href="{{ route($loc.'.about') }}" wire:navigate data-track="cta_click" data-cta="hero_secondary" class="border-2 border-ink text-ink px-6 py-4 font-semibold text-base hover:bg-ink hover:text-white">{{ $page->get('cta_secondary') }}</a>
             </div>
         </div>
         <div class="relative self-stretch">

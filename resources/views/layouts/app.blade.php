@@ -23,6 +23,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- OpenPanel analytics (production host only) --}}
+    @include('partials.analytics')
+
     {{-- Full SEO/GEO head: title, meta, canonical, hreflang, OG, Twitter, JSON-LD --}}
     {!! app(\App\Support\Seo::class)->render() !!}
 </head>

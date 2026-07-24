@@ -84,6 +84,7 @@
                 <div class="text-lg font-bold text-white mb-2.5">{{ $global->get('newsletter_title') }}</div>
                 <p class="text-sm leading-relaxed text-on-ink mb-4">{{ $global->get('newsletter_text') }}</p>
                 <a href="{{ $global->get('newsletter_url') ?: 'https://www.bcci.bg' }}" target="_blank" rel="noopener"
+                   data-track="newsletter_subscribe" data-location="contacts"
                    class="inline-block bg-brand text-white px-5 py-3 font-semibold text-sm hover:bg-brand-dark">{{ __('Абонирай ме') }}</a>
             </div>
         </div>

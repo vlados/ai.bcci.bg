@@ -11,6 +11,7 @@
                 @else
                     <a href="{{ $alt['url'] }}" wire:navigate
                        lang="{{ $alt['locale'] }}" hreflang="{{ $alt['locale'] }}"
+                       data-track="language_switch" data-to="{{ $alt['locale'] }}"
                        class="hover:text-white">{{ $alt['label'] }}</a>
                 @endif
                 @unless ($loop->last)

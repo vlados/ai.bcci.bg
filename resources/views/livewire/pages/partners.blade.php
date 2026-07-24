@@ -42,7 +42,7 @@
                 <div class="text-xl lg:text-2xl font-bold text-white mb-2.5 tracking-tight">{{ $page->get('join_title') }}</div>
                 <p class="text-base text-on-ink">{{ $page->get('join_text') }}</p>
             </div>
-            <a href="{{ route($loc.'.contacts') }}" wire:navigate class="bg-brand text-white px-7 py-4 font-semibold text-base whitespace-nowrap hover:bg-brand-dark">{{ $page->get('join_button') }}</a>
+            <a href="{{ route($loc.'.contacts') }}" wire:navigate data-track="partner_join_click" class="bg-brand text-white px-7 py-4 font-semibold text-base whitespace-nowrap hover:bg-brand-dark">{{ $page->get('join_button') }}</a>
         </div>
     </div>
 </div>
