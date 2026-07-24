@@ -141,4 +141,73 @@ return [
         '50-249' => ['bg' => 13.30, 'eu' => 30.36],
         '250+' => ['bg' => 26.18, 'eu' => 55.03],
     ],
+
+    /*
+     | 2025 adoption ranked across Member States — same dataset (isoc_eb_ai,
+     | E_AI_TANY, 10+ employed). Included because it shows the region is not
+     | destiny: Slovenia sits above the EU average while Bulgaria is third from
+     | bottom. `avg` is the EU-27 figure, carried for the reference line.
+     |
+     | Ordered high to low, exactly as published — do not resort for effect.
+     */
+    'ai_adoption_ranking' => [
+        'avg' => 19.95,
+        'countries' => [
+            ['code' => 'DK', 'bg' => 'Дания', 'en' => 'Denmark', 'value' => 42.03],
+            ['code' => 'FI', 'bg' => 'Финландия', 'en' => 'Finland', 'value' => 37.82],
+            ['code' => 'SE', 'bg' => 'Швеция', 'en' => 'Sweden', 'value' => 35.04],
+            ['code' => 'SI', 'bg' => 'Словения', 'en' => 'Slovenia', 'value' => 21.61],
+            ['code' => 'SK', 'bg' => 'Словакия', 'en' => 'Slovakia', 'value' => 18.00],
+            ['code' => 'CZ', 'bg' => 'Чехия', 'en' => 'Czechia', 'value' => 17.60],
+            ['code' => 'HR', 'bg' => 'Хърватия', 'en' => 'Croatia', 'value' => 15.19],
+            ['code' => 'HU', 'bg' => 'Унгария', 'en' => 'Hungary', 'value' => 10.37],
+            ['code' => 'EL', 'bg' => 'Гърция', 'en' => 'Greece', 'value' => 8.93],
+            ['code' => 'BG', 'bg' => 'България', 'en' => 'Bulgaria', 'value' => 8.55],
+            ['code' => 'PL', 'bg' => 'Полша', 'en' => 'Poland', 'value' => 8.36],
+            ['code' => 'RO', 'bg' => 'Румъния', 'en' => 'Romania', 'value' => 5.21],
+        ],
+    ],
+
+    /*
+     | Why enterprises that CONSIDERED AI decided against it, 2025.
+     |
+     | Dataset:    isoc_eb_ai, share of enterprises that have ever considered
+     |             using AI (NOT of all enterprises — the denominator matters).
+     | `considered` is that base: only 11.1% of EU and 4.89% of BG enterprises
+     |             ever considered AI at all.
+     |
+     | The point of the beat: "not useful" is the SMALLEST reason on both sides.
+     | The barrier is capacity — expertise, legal clarity, data protection — not
+     | scepticism about the technology.
+     */
+    'ai_barriers' => [
+        'considered' => ['bg' => 4.89, 'eu' => 11.10],
+        'reasons' => [
+            ['bg_label' => 'Липса на експертиза', 'en_label' => 'Lack of expertise', 'bg' => 72.69, 'eu' => 70.31],
+            ['bg_label' => 'Правна неяснота', 'en_label' => 'Legal uncertainty', 'bg' => 50.29, 'eu' => 53.61],
+            ['bg_label' => 'Защита на данните', 'en_label' => 'Data-protection concerns', 'bg' => 47.68, 'eu' => 52.72],
+            ['bg_label' => 'ИИ не е полезен', 'en_label' => 'AI not useful', 'bg' => 16.26, 'eu' => 17.79],
+        ],
+    ],
+
+    /*
+     | Individuals' use of generative AI in the three months before the survey,
+     | 2025. A DIFFERENT dataset and population from the enterprise figures —
+     | shown to contrast personal uptake with employer uptake, not as a like
+     | comparison.
+     |
+     | Dataset:    isoc_ai_iaiu (indicator I_IUAI, generative AI), persons 16-74
+     | source:     https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_by_individuals
+     */
+    'ai_individuals' => [
+        'dataset' => 'isoc_ai_iaiu',
+        'extracted_on' => '2026-07-22',
+        'bg_16_74' => 22.50,
+        'eu_16_74' => 32.66,
+        'bg_16_24' => 49.98,
+        'bg_25_54' => 26.78,
+        'bg_55_74' => 8.09,
+        // The enterprise figure, repeated for the side-by-side contrast.
+        'bg_enterprise' => 8.55,
+    ],
 ];

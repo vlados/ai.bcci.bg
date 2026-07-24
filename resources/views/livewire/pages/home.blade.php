@@ -144,7 +144,10 @@
                 <p class="text-sm leading-relaxed text-muted">
                     {{ __('Изкуственият интелект стъпва именно върху този слой. Националното проучване на Съвета ще покаже какво стои зад цифрите — кои процеси, кои пречки и кои сектори.') }}
                 </p>
-                <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-base font-semibold text-brand-dark w-fit">{{ __('Към проучването') }} →</a>
+                <div class="flex flex-wrap gap-x-6 gap-y-2">
+                    <a href="{{ route($loc.'.story') }}" wire:navigate class="text-base font-semibold text-brand-dark w-fit">{{ __('Разгледайте разликата') }} →</a>
+                    <a href="{{ route($loc.'.survey') }}" wire:navigate class="text-base font-semibold text-muted w-fit hover:text-brand-dark">{{ __('Към проучването') }} →</a>
+                </div>
             </div>
         </div>
 

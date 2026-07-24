@@ -26,6 +26,7 @@ class SitemapBuilder
         'survey' => 0.8,
         'partners' => 0.7,
         'news' => 0.9,
+        'story' => 0.8,
         'contacts' => 0.6,
     ];
 

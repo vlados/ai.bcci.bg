@@ -258,9 +258,150 @@ document.addEventListener('livewire:navigating', (e) => {
     e.detail?.onSwap?.(armMotion);
 });
 
+// ---------------------------------------------------------------------------
+// Data story (/ai-adoption-2026): GSAP scroll animation, imported ONLY on that
+// page so the rest of the site keeps its ~4KB JS budget.
+//
+// Contract, so this can never strand the page: every bar, line and number is
+// authored in the HTML at its final, visible value. GSAP sets the from-states
+// itself, so a failed dynamic import, a superseded navigation, or reduced
+// motion all leave a finished static document behind — nothing stuck hidden.
+
+let storyCtx = null; // active gsap.context, if any
+let storyGen = 0; // bumped each setup; guards the async import against SPA nav
+
+function decimalsOf(s) {
+    const parts = String(s).split('.');
+    return parts[1] ? parts[1].length : 0;
+}
+
+async function setupStory() {
+    // Tear down first, before any guard: this runs on every boot() (including
+    // wire:navigate), and the context outlives the DOM swap — leaving the story
+    // for a plain page has to remove its ScrollTriggers or they leak and error.
+    if (storyCtx) {
+        storyCtx.revert();
+        storyCtx = null;
+    }
+
+    const root = document.querySelector('[data-story]');
+    if (!root || !document.documentElement.classList.contains('motion-on')) {
+        return;
+    }
+
+    const gen = ++storyGen;
+    let gsap, ScrollTrigger;
+    try {
+        ({ gsap } = await import('gsap'));
+        ({ ScrollTrigger } = await import('gsap/ScrollTrigger'));
+    } catch {
+        return; // chunk unavailable (e.g. a deploy mid-session) — leave it static
+    }
+
+    // While the chunk loaded the visitor may have navigated again, or away: a
+    // newer setup supersedes this one, or the root is no longer in the document.
+    if (gen !== storyGen || !document.contains(root)) {
+        return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+    const locale = document.documentElement.lang || 'bg';
+
+    storyCtx = gsap.context((self) => {
+        const q = self.selector;
+
+        // Fade-up reveals.
+        q('[data-enter]').forEach((el) => {
+            gsap.from(el, {
+                opacity: 0,
+                y: 22,
+                duration: 0.7,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: el, start: 'top 88%' },
+            });
+        });
+
+        // Count-ups. Decimals follow whichever endpoint carries more, so a value
+        // like 8.55 keeps both digits and 38 stays whole.
+        q('[data-count]').forEach((el) => {
+            const to = parseFloat(el.dataset.count);
+            const from = el.dataset.from !== undefined ? parseFloat(el.dataset.from) : 0;
+            const decimals = Math.max(decimalsOf(el.dataset.count), decimalsOf(el.dataset.from ?? '0'));
+            const suffix = el.dataset.suffix || '';
+            const fmt = (v) => {
+                let s = v.toFixed(decimals);
+                if (locale === 'bg') s = s.replace('.', ',');
+                return s + suffix;
+            };
+            const obj = { v: from };
+            el.textContent = fmt(from);
+            gsap.to(obj, {
+                v: to,
+                duration: 1.4,
+                ease: 'power2.out',
+                onUpdate: () => (el.textContent = fmt(obj.v)),
+                scrollTrigger: { trigger: el, start: 'top 90%' },
+            });
+        });
+
+        // Vertical bars grow from the baseline, staggered across the group.
+        const bars = root.querySelector('.st-bars');
+        if (bars) {
+            gsap.from(bars.querySelectorAll('[data-bar]'), {
+                height: 0,
+                duration: 0.9,
+                ease: 'power3.out',
+                stagger: 0.1,
+                scrollTrigger: { trigger: bars, start: 'top 82%' },
+            });
+        }
+
+        // Horizontal bars wipe in from the left (transform-origin set in CSS).
+        root.querySelectorAll('.st-rank, .st-barriers').forEach((group) => {
+            gsap.from(group.querySelectorAll('[data-bar-h]'), {
+                scaleX: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.05,
+                scrollTrigger: { trigger: group, start: 'top 82%' },
+            });
+        });
+
+        // The one scrubbed moment: the two trend lines draw as the figure passes,
+        // then the endpoint dots and values fade in.
+        const fig = root.querySelector('[data-beat="line"] .st-figure');
+        if (fig) {
+            const lines = fig.querySelectorAll('[data-line]');
+            const dots = fig.querySelectorAll('[data-dot]');
+            lines.forEach((ln) => {
+                const len = ln.getTotalLength();
+                gsap.set(ln, { strokeDasharray: len, strokeDashoffset: len });
+            });
+            gsap.set(dots, { opacity: 0 });
+            gsap
+                .timeline({
+                    scrollTrigger: { trigger: fig, start: 'top 72%', end: 'bottom 70%', scrub: 0.6 },
+                })
+                .to(lines, { strokeDashoffset: 0, ease: 'none', duration: 0.85 })
+                .to(dots, { opacity: 1, duration: 0.15 }, '>-0.05');
+        }
+    }, root);
+
+    // Trigger positions depend on metrics that settle after boot(): the Condensed
+    // face shifts widths on load, and a wire:navigate view transition lands late.
+    const refresh = () => gen === storyGen && ScrollTrigger.refresh();
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refresh);
+    }
+    if (activeTransition) {
+        activeTransition.finished.catch(() => {}).then(refresh);
+    }
+}
+
 function boot() {
     armMotion(); // belt and braces, in case onSwap was unavailable
     setupReveals();
+    setupStory();
 
     if (activeTransition) {
         revealWhatIsAlreadyInView();

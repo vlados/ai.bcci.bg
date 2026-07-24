@@ -415,3 +415,159 @@ h1, h2 { letter-spacing: -0.015em; }
     .reading-rail__fill { animation: none; }
 }
 
+/*
+| ============================================================================
+| AI-adoption data story — a standalone scroll-driven page.
+|
+| The motion is layered on by GSAP (dynamically imported only on this page, see
+| resources/js/app.js). Deliberately NO from-states live here: every bar, line
+| and number is authored at its final, visible value, and GSAP sets the
+| from-state itself. So if the import fails, or the visitor asked for reduced
+| motion, the page degrades to a finished static document — no stuck-hidden
+| content, which is the same contract the rest of the site keeps.
+|
+| Visual language follows the article page: Condensed display face for figures
+| and headings, PT Serif for narrative prose, the brand red / EU blue coding
+| carried from the site's charts.
+| ============================================================================
+*/
+.story { --st-measure: 40rem; --st-shell: 52rem; overflow-x: clip; }
+.story .st-shell { max-width: var(--st-shell); margin-inline: auto; padding-inline: 1.25rem; }
+@media (min-width: 640px) { .story .st-shell { padding-inline: 2rem; } }
+
+.story .st-bg { color: var(--color-brand); }
+.story .st-eu { color: var(--color-eu); }
+
+/* — Hero — */
+.st-hero { background: var(--color-paper); border-bottom: 1px solid var(--color-line);
+    min-height: 88vh; display: flex; align-items: center; text-align: center; padding: 5rem 0; }
+.st-kicker { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--font-display);
+    font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-ink-soft); }
+.st-duel { display: flex; align-items: center; justify-content: center; gap: clamp(1rem, 5vw, 3.5rem);
+    margin: 2rem 0 1.5rem; }
+.st-duel__side { display: flex; flex-direction: column; align-items: center; }
+.st-duel__vs { font-family: var(--font-serif); font-style: italic; font-size: clamp(1rem, 2.4vw, 1.5rem);
+    color: var(--color-faint); align-self: center; }
+.st-huge { font-family: var(--font-display); font-weight: 700; line-height: 0.9;
+    letter-spacing: -0.03em; font-variant-numeric: tabular-nums; font-size: clamp(3.4rem, 13vw, 8rem); }
+.st-big { font-family: var(--font-display); font-weight: 700; line-height: 0.92;
+    letter-spacing: -0.02em; font-variant-numeric: tabular-nums; font-size: clamp(2.6rem, 8vw, 5rem); }
+.st-duel__label { margin-top: 0.6rem; font-family: var(--font-display); font-weight: 700;
+    font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-soft);
+    max-width: 12rem; }
+.st-title { margin-top: 0.5rem; font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.6rem); line-height: 1.03; letter-spacing: -0.02em;
+    color: var(--color-ink); text-wrap: balance; }
+.st-standfirst { margin: 1.25rem auto 0; max-width: 34rem; font-family: var(--font-sans);
+    font-weight: 500; font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.55; color: var(--color-ink-soft); }
+.st-scrollcue { margin-top: 2.75rem; display: inline-flex; flex-direction: column; align-items: center;
+    gap: 0.4rem; font-family: var(--font-display); font-weight: 700; font-size: 0.7rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-faint); }
+.motion-on .st-scrollcue svg { animation: st-bob 1.8s ease-in-out infinite; }
+@keyframes st-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+/* — Beats — */
+.st-beat { padding: clamp(4rem, 10vw, 7rem) 0; }
+.st-beat--paper { background: var(--color-paper); }
+.st-beat--ink { background: var(--color-ink); }
+.st-lead { max-width: var(--st-measure); margin: 0 auto clamp(2rem, 5vw, 3.25rem); }
+.st-h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.1; letter-spacing: -0.015em; color: var(--color-ink); }
+.st-h2::before { content: ''; display: block; width: 2.25rem; height: 4px; background: var(--color-brand);
+    margin-bottom: 1rem; }
+.st-h2--light { color: #fff; }
+.st-prose { margin-top: 1rem; font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.75;
+    color: #2b2c30; }
+.st-prose--light { color: rgba(255, 255, 255, 0.82); }
+.st-prose--center { max-width: 36rem; margin-inline: auto; text-align: center; }
+
+/* — Line chart (beat 1) — */
+.st-figure { max-width: var(--st-shell); margin: 0 auto; }
+.st-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin-bottom: 0.75rem;
+    font-size: 0.8125rem; }
+.st-legend__item { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.st-swatch { width: 0.85rem; height: 0.85rem; display: block; background: currentColor; }
+.st-legend .st-bg .st-swatch, .st-legend__item.st-bg { color: var(--color-brand); }
+.st-legend__axis { color: var(--color-faint); margin-left: auto; }
+.st-linechart { width: 100%; height: auto; display: block; }
+.st-grid { stroke: var(--color-line); stroke-width: 1; }
+.st-tick { fill: var(--color-faint); font-family: var(--font-sans); font-size: 11px; font-variant-numeric: tabular-nums; }
+.st-line { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.st-line--bg { stroke: var(--color-brand); }
+.st-line--eu { stroke: var(--color-eu); }
+.st-dot--bg { fill: var(--color-brand); }
+.st-dot--eu { fill: var(--color-eu); }
+.st-val { font-family: var(--font-display); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+.st-val--bg { fill: var(--color-brand); }
+.st-val--eu { fill: var(--color-eu); }
+
+.st-gapcard { max-width: var(--st-measure); margin: clamp(2rem, 5vw, 3rem) auto 0; text-align: center; }
+.st-gapcard__num { font-family: var(--font-display); font-weight: 700; color: var(--color-brand);
+    font-size: clamp(3rem, 10vw, 6rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.st-gapcard__label { margin-top: 0.5rem; font-family: var(--font-sans); font-size: 0.95rem;
+    color: var(--color-ink-soft); max-width: 24rem; margin-inline: auto; }
+
+/* — Grouped vertical bars (beat 2) — */
+.st-bars { display: flex; justify-content: center; gap: clamp(1.5rem, 6vw, 4rem); max-width: var(--st-shell);
+    margin-inline: auto; }
+.st-bargroup { flex: 1; max-width: 12rem; }
+.st-bargroup__plot { display: flex; align-items: flex-end; justify-content: center; gap: 0.75rem;
+    height: clamp(180px, 30vw, 260px); }
+.st-barcol { flex: 1; max-width: 3.5rem; height: 100%; display: flex; align-items: flex-end; }
+.st-bar { position: relative; width: 100%; height: var(--h); min-height: 3px; }
+.st-bar--bg { background: var(--color-brand); }
+.st-bar--eu { background: var(--color-eu); }
+.st-bar__val { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    margin-bottom: 0.4rem; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem;
+    white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--color-ink); }
+.st-bargroup__label { margin-top: 0.9rem; text-align: center; font-family: var(--font-display);
+    font-weight: 700; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-faint); }
+
+/* — Ranked horizontal bars (beat 3) — */
+.st-rank { max-width: var(--st-measure); margin-inline: auto; }
+.st-rankrow { display: grid; grid-template-columns: 6.5rem 1fr 3rem; align-items: center; gap: 0.75rem;
+    padding: 0.3rem 0; }
+.st-rankrow__name { font-size: 0.9rem; color: var(--color-ink-soft); text-align: right; }
+.st-rankrow__track { height: 1.05rem; background: var(--color-paper); }
+.st-beat--paper .st-rankrow__track { background: #fff; }
+.st-rankbar { height: 100%; width: var(--w); background: #c9c8c3; transform-origin: left center; }
+.st-rankbar.st-bar--bg { background: var(--color-brand); }
+.st-rankrow__val { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem;
+    font-variant-numeric: tabular-nums; color: var(--color-ink-soft); }
+.st-rankrow.is-focus .st-rankrow__name { color: var(--color-brand); font-weight: 700; }
+.st-rankrow.is-focus .st-rankrow__val { color: var(--color-brand); }
+.st-rank__note { margin-top: 1rem; font-size: 0.8125rem; color: var(--color-faint);
+    padding-left: 7.25rem; }
+
+/* — Barriers (beat 4, on ink) — */
+.st-barriers { max-width: var(--st-measure); margin-inline: auto; }
+.st-barrier { display: grid; grid-template-columns: 11rem 1fr 3rem; align-items: center; gap: 0.9rem;
+    padding: 0.55rem 0; }
+.st-barrier__label { font-size: 0.95rem; color: rgba(255, 255, 255, 0.9); text-align: right; }
+.st-barrier__track { height: 1.4rem; background: rgba(255, 255, 255, 0.08); }
+.st-barrier__fill { height: 100%; width: var(--w); background: var(--color-brand); transform-origin: left center; }
+.st-barrier__val { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+    font-variant-numeric: tabular-nums; color: #fff; }
+.st-barrier.is-muted .st-barrier__fill { background: rgba(255, 255, 255, 0.25); }
+.st-barrier.is-muted .st-barrier__label,
+.st-barrier.is-muted .st-barrier__val { color: rgba(255, 255, 255, 0.5); }
+.st-barriers__foot { margin-top: 1.5rem; font-family: var(--font-sans); font-size: 0.875rem;
+    line-height: 1.6; color: rgba(255, 255, 255, 0.6); }
+
+/* — Close — */
+.st-close { padding: clamp(4rem, 9vw, 6.5rem) 0; text-align: center; }
+.st-endmark { width: 0.65rem; height: 0.65rem; background: var(--color-brand); margin: 0 auto 2rem; }
+.st-takeaway { max-width: 40rem; margin: 0 auto; font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.1rem); line-height: 1.2; letter-spacing: -0.01em; color: var(--color-ink);
+    text-wrap: balance; }
+.st-cta { margin-top: 2.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 1rem 1.75rem; }
+.st-cta__primary { background: var(--color-brand); color: #fff; font-weight: 600; font-size: 1rem;
+    padding: 0.85rem 1.6rem; transition: background 0.2s ease; }
+.st-cta__primary:hover { background: var(--color-brand-dark); }
+.st-cta__link { font-weight: 600; font-size: 1rem; color: var(--color-ink-soft);
+    border-bottom: 2px solid var(--color-brand); padding-bottom: 0.15rem; }
+.st-sources { margin: 2.5rem auto 0; max-width: 40rem; font-size: 0.8125rem; line-height: 1.6;
+    color: var(--color-faint); }
+

@@ -9,6 +9,7 @@ use App\Livewire\Pages\News;
 use App\Livewire\Pages\NewsShow;
 use App\Livewire\Pages\Partners;
 use App\Livewire\Pages\Positions;
+use App\Livewire\Pages\Story;
 use App\Livewire\Pages\Survey;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,11 @@ foreach (array_keys(config('site.locales')) as $locale) {
             Route::get('partners', Partners::class)->name('partners');
             Route::get('news', News::class)->name('news');
             Route::get('news/{article:slug}', NewsShow::class)->name('news.show');
+
+            // Standalone scroll-driven data story on the AI-adoption gap. Named
+            // in the locale group like the rest, so SiteNav derives its hreflang
+            // alternates and language-switcher target automatically.
+            Route::get('ai-adoption-2026', Story::class)->name('story');
             Route::get('contacts', Contacts::class)->name('contacts');
 
             // Per-locale RSS feed for news.
