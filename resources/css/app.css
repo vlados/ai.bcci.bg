@@ -33,7 +33,8 @@
     --color-hush: #55565a;         /* secondary text inside cards */
     --color-paper-soft: #fbfaf8;   /* row hover, partner tiles */
     --color-line-strong: #c9c8c3;  /* chip outlines, one step up from --color-line */
-    --color-brand-wash: #fdf3f3;   /* status banners */
+    --color-success: #1a7f4b;      /* confirmation banners — brand red reads as an error */
+    --color-success-wash: #f1f8f4;
     --color-on-ink: #a9aaae;       /* body text on the ink background */
     --color-on-ink-bright: #b9babe;
     --color-ink-line: #2a2b2f;     /* rules drawn on the ink background */

@@ -8,13 +8,18 @@
         </div>
     </div>
 
-    <div class="reveal max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-14 items-start">
+    {{-- wire:ignore.self keeps Livewire's morph off this element's own attributes.
+         The scroll-reveal adds `is-visible` from JS; the server HTML never carries
+         it, so without this a submit would morph the class away and fade the whole
+         form back to opacity 0. Children still morph — errors, the confirmation
+         and the cleared fields all update normally. --}}
+    <div wire:ignore.self class="reveal max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-16 grid lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-14 items-start">
         <form wire:submit="submit" class="border border-line px-5 py-6 sm:px-10 sm:pt-9 sm:pb-10">
             <h2 class="text-2xl font-bold mb-6">{{ $page->get('form_title') }}</h2>
 
             {{-- role="status" so the confirmation is announced, not just shown. --}}
             @if ($sent)
-                <div role="status" class="mb-6 border border-brand bg-brand-wash text-ink-soft px-4 py-3 text-base">
+                <div role="status" class="mb-6 border border-success bg-success-wash text-ink-soft px-4 py-3 text-base">
                     {{ __('Благодарим ви! Съобщението беше изпратено.') }}
                 </div>
             @endif

@@ -3,13 +3,16 @@
 namespace Tests\Feature;
 
 use App\Livewire\Pages\Contacts;
+use App\Mail\ContactMessageReceived;
 use App\Models\ContactMessage;
 use App\Models\NewsArticle;
+use App\Models\Page;
 use App\Support\LlmsTxtBuilder;
 use App\Support\SitemapBuilder;
 use Database\Seeders\SiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -147,5 +150,71 @@ class FrontendTest extends TestCase
             ->assertHasErrors(['name', 'email', 'message']);
 
         $this->assertDatabaseCount(ContactMessage::class, 0);
+    }
+
+    /**
+     * The site's locale and fallback are both bg and there is no bg validation
+     * lang file, so without explicit messages the visitor reads the raw key
+     * "validation.required" under the field.
+     */
+    public function test_contact_form_errors_are_human_readable_in_both_locales(): void
+    {
+        foreach (['bg' => 'Моля, въведете вашето име.', 'en' => 'Please enter your name.'] as $locale => $expected) {
+            app()->setLocale($locale);
+
+            $errors = Livewire::test(Contacts::class)
+                ->set('name', '')
+                ->set('email', 'still@not.valid.enough')
+                ->set('message', '')
+                ->call('submit')
+                ->errors();
+
+            $this->assertSame($expected, $errors->first('name'), "wrong message for [$locale]");
+            $this->assertStringNotContainsString('validation.', $errors->first('message'));
+        }
+    }
+
+    public function test_contact_form_emails_the_council(): void
+    {
+        Mail::fake();
+        app()->setLocale('bg');
+
+        Livewire::test(Contacts::class)
+            ->set('name', 'Иван Петров')
+            ->set('email', 'ivan@example.com')
+            ->set('message', 'Здравейте, имам въпрос.')
+            ->call('submit')
+            ->assertHasNoErrors();
+
+        $recipient = Page::forKey('global')->get('contact_email');
+        $this->assertNotEmpty($recipient, 'the seeded global page should carry a contact address');
+
+        Mail::assertSent(ContactMessageReceived::class, function (ContactMessageReceived $mail) use ($recipient) {
+            $rendered = $mail->render();
+
+            return $mail->hasTo($recipient)
+                && $mail->hasReplyTo('ivan@example.com')
+                && str_contains($rendered, 'Здравейте, имам въпрос.')
+                && str_contains($rendered, 'ivan@example.com');
+        });
+    }
+
+    /** A mailer that is down must not lose a message the visitor already sent. */
+    public function test_contact_message_survives_a_failing_mailer(): void
+    {
+        // ->once() is the point: it proves a send was actually attempted rather
+        // than skipped by the empty-recipient guard, which would otherwise let
+        // this test pass while no mail is ever sent.
+        Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('SMTP is down'));
+
+        Livewire::test(Contacts::class)
+            ->set('name', 'Иван Петров')
+            ->set('email', 'ivan@example.com')
+            ->set('message', 'Здравейте, имам въпрос.')
+            ->call('submit')
+            ->assertSet('sent', true)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(ContactMessage::class, ['email' => 'ivan@example.com']);
     }
 }
